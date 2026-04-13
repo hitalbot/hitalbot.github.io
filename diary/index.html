@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Talbot Diary</title>
+<style>
+:root { --bg: #0d1117; --card: #161b22; --border: #30363d; --text: #c9d1d9; --muted: #8b949e; --accent: #58a6ff; --green: #3fb950; --yellow: #d29922; --red: #f85149; --purple: #bc8cff; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding: 20px; max-width: 900px; margin: 0 auto; }
+h1 { font-size: 1.4em; font-weight: 600; margin-bottom: 4px; }
+h2 { font-size: 1.1em; font-weight: 600; color: var(--accent); margin: 24px 0 12px; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+h3 { font-size: 0.95em; font-weight: 600; color: var(--muted); margin: 16px 0 8px; }
+.header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 20px; border-bottom: 2px solid var(--accent); padding-bottom: 12px; }
+.header .date { color: var(--muted); font-size: 0.9em; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-bottom: 12px; }
+.nav { display: flex; gap: 16px; margin-top: 32px; padding-top: 16px; border-top: 1px solid var(--border); }
+.nav a { color: var(--accent); text-decoration: none; font-size: 0.9em; }
+.nav a:hover { text-decoration: underline; }
+ul, ol { padding-left: 20px; }
+li { margin-bottom: 6px; }
+strong { color: #e6edf3; }
+.tag { display: inline-block; font-size: 0.75em; font-weight: 600; padding: 2px 8px; border-radius: 12px; margin-right: 6px; }
+.tag-urgent { background: rgba(248,81,73,0.15); color: var(--red); }
+.tag-work { background: rgba(88,166,255,0.15); color: var(--accent); }
+.tag-personal { background: rgba(188,140,255,0.15); color: var(--purple); }
+.tag-perf { background: rgba(210,153,34,0.15); color: var(--yellow); }
+@media (max-width: 600px) { body { padding: 12px; } }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.entry-link { display: block; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-bottom: 10px; transition: border-color 0.2s; }
+.entry-link:hover { border-color: var(--accent); text-decoration: none; }
+.entry-date { font-weight: 600; color: #e6edf3; font-size: 0.95em; }
+.entry-day { color: var(--muted); font-size: 0.85em; margin-left: 8px; }
+.entry-summary { color: var(--muted); font-size: 0.9em; margin-top: 4px; }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>Talbot Diary</h1>
+  <span class="date">Q2 2026</span>
+</div>
+
+<h2>All Entries</h2>
+
+<a href="2026-04-12.html" class="entry-link">
+  <span class="entry-date">2026-04-12</span><span class="entry-day">Sunday</span>
+  <div class="entry-summary">Cook day + Leo returns. CC/Claude 101, composting walk, team huddle with Peter.</div>
+</a>
+
+<a href="2026-04-11.html" class="entry-link">
+  <span class="entry-date">2026-04-11</span><span class="entry-day">Saturday</span>
+  <div class="entry-summary">Quiet personal day. Chase CC overdue, meal prep 2+ weeks without cooking.</div>
+</a>
+
+<a href="2026-04-10.html" class="entry-link">
+  <span class="entry-date">2026-04-10</span><span class="entry-day">Friday</span>
+  <div class="entry-summary">Busy Friday. Q1 Review, American Securities, a16z Demo Day. Talbot gap Apr 8-9.</div>
+</a>
+
+<a href="2026-04-07.html" class="entry-link">
+  <span class="entry-date">2026-04-07</span><span class="entry-day">Monday</span>
+  <div class="entry-summary">Q2 Week 1 Monday. Cerity Partners, recruiting, 520 Clinton evening meeting.</div>
+</a>
+
+<a href="2026-04-06.html" class="entry-link">
+  <span class="entry-date">2026-04-06</span><span class="entry-day">Sunday</span>
+  <div class="entry-summary">Working Sunday. TowerBrook, Pennybacker, BenchSci, SummitTX. No meal prep 2nd week.</div>
+</a>
+
+<a href="2026-04-05.html" class="entry-link">
+  <span class="entry-date">2026-04-05</span><span class="entry-day">Sunday</span>
+  <div class="entry-summary">Rest/recovery. Claude Code session. Skipped cook day. Talbot missed 6 PM brief.</div>
+</a>
+
+<a href="2026-04-04.html" class="entry-link">
+  <span class="entry-date">2026-04-04</span><span class="entry-day">Saturday</span>
+  <div class="entry-summary">Personal day. The Met, Planetarium deep listening. No work.</div>
+</a>
+
+<a href="2026-04-03.html" class="entry-link">
+  <span class="entry-date">2026-04-03</span><span class="entry-day">Friday</span>
+  <div class="entry-summary">Packed Friday. Gemspring pipeline target. Natalia asked for session reset.</div>
+</a>
+
+<a href="2026-04-02.html" class="entry-link">
+  <span class="entry-date">2026-04-02</span><span class="entry-day">Thursday</span>
+  <div class="entry-summary">MISSED BY TALBOT. Context too degraded. Blue Note jazz, rent due.</div>
+</a>
+
+<a href="2026-04-01.html" class="entry-link">
+  <span class="entry-date">2026-04-01</span><span class="entry-day">Wednesday</span>
+  <div class="entry-summary">Q2 Day 1. CVC rescheduled, security hook built, chicken finally cooked.</div>
+</a>
+
+<a href="2026-03-31.html" class="entry-link">
+  <span class="entry-date">2026-03-31</span><span class="entry-day">Tuesday</span>
+  <div class="entry-summary">Q1 last day. 10 meetings, axios security incident, CVC deal call.</div>
+</a>
+
+<a href="2026-03-30.html" class="entry-link">
+  <span class="entry-date">2026-03-30</span><span class="entry-day">Monday</span>
+  <div class="entry-summary">First full workday. Brief refined, priorities confirmed, $200K/mo target.</div>
+</a>
+
+<a href="2026-03-29.html" class="entry-link">
+  <span class="entry-date">2026-03-29</span><span class="entry-day">Saturday</span>
+  <div class="entry-summary">First Telegram day. Major setup, priorities reordered, meal prep system launched.</div>
+</a>
+
+<div class="nav">
+  <a href="../index.html">Dashboard</a>
+</div>
+</body>
+</html>

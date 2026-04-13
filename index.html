@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Talbot Dashboard</title>
+<style>
+  :root { --bg: #0d1117; --card: #161b22; --border: #30363d; --text: #c9d1d9; --muted: #8b949e; --accent: #58a6ff; --green: #3fb950; --yellow: #d29922; --red: #f85149; --purple: #bc8cff; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding: 20px; max-width: 900px; margin: 0 auto; }
+  h1 { font-size: 1.4em; font-weight: 600; margin-bottom: 4px; }
+  h2 { font-size: 1.1em; font-weight: 600; color: var(--accent); margin: 24px 0 12px; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+  h3 { font-size: 0.95em; font-weight: 600; color: var(--muted); margin: 16px 0 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 20px; border-bottom: 2px solid var(--accent); padding-bottom: 12px; }
+  .header .date { color: var(--muted); font-size: 0.9em; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-bottom: 12px; }
+  .tag { display: inline-block; font-size: 0.75em; font-weight: 600; padding: 2px 8px; border-radius: 12px; margin-right: 6px; }
+  .tag-urgent { background: rgba(248,81,73,0.15); color: var(--red); }
+  .tag-work { background: rgba(88,166,255,0.15); color: var(--accent); }
+  .tag-personal { background: rgba(188,140,255,0.15); color: var(--purple); }
+  .tag-done { background: rgba(63,185,80,0.15); color: var(--green); }
+  .item { padding: 8px 0; border-bottom: 1px solid var(--border); display: flex; align-items: baseline; gap: 8px; }
+  .item:last-child { border-bottom: none; }
+  .item .status { font-size: 0.85em; }
+  .item .label { flex: 1; }
+  .item .meta { color: var(--muted); font-size: 0.85em; white-space: nowrap; }
+  .revenue { display: flex; gap: 16px; flex-wrap: wrap; }
+  .revenue .stat { flex: 1; min-width: 120px; text-align: center; padding: 12px; }
+  .revenue .num { font-size: 1.5em; font-weight: 700; color: var(--green); }
+  .revenue .label { font-size: 0.8em; color: var(--muted); }
+  table { width: 100%; border-collapse: collapse; font-size: 0.9em; }
+  th { text-align: left; color: var(--muted); font-weight: 600; padding: 6px 8px; border-bottom: 1px solid var(--border); }
+  td { padding: 6px 8px; border-bottom: 1px solid var(--border); }
+  .nav { display: flex; gap: 16px; margin-top: 32px; padding-top: 16px; border-top: 1px solid var(--border); }
+  .nav a { color: var(--accent); text-decoration: none; font-size: 0.9em; }
+  .nav a:hover { text-decoration: underline; }
+  .diary-list { list-style: none; }
+  .diary-list li { padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .diary-list li:last-child { border-bottom: none; }
+  .diary-list a { color: var(--accent); text-decoration: none; font-weight: 500; }
+  .diary-list a:hover { text-decoration: underline; }
+  .diary-list .summary { color: var(--muted); font-size: 0.85em; margin-top: 2px; }
+  @media (max-width: 600px) { body { padding: 12px; } .revenue { flex-direction: column; } }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Talbot Dashboard</h1>
+  <span class="date" id="updated"></span>
+</div>
+
+<div class="card">
+  <div class="revenue">
+    <div class="stat"><div class="num">$200K</div><div class="label">Monthly Target</div></div>
+    <div class="stat"><div class="num">$3.5M</div><div class="label">Annual Target</div></div>
+    <div class="stat"><div class="num">Q2</div><div class="label">Current Quarter</div></div>
+  </div>
+</div>
+
+<h2>Open Items</h2>
+
+<h3>Urgent</h3>
+<div class="card" id="urgent-items">
+  <div class="item"><span class="status">&#9744;</span><span class="label"><span class="tag tag-urgent">URGENT</span><strong>Chase CC payment</strong> &mdash; due Apr 10, payment NOT confirmed</span><span class="meta">Day 3</span></div>
+  <div class="item"><span class="status">&#9744;</span><span class="label"><span class="tag tag-urgent">URGENT</span><strong>Passport facial capture</strong> &mdash; Natalia must complete registration. First booking: Tue Apr 14, 9 AM</span><span class="meta">Blocked</span></div>
+  <div class="item"><span class="status">&#9744;</span><span class="label"><span class="tag tag-urgent">URGENT</span><strong>Meal prep</strong> &mdash; 2+ weeks without cooking</span><span class="meta">Critical</span></div>
+</div>
+
+<h3>Pipeline &amp; Clients</h3>
+<div class="card" id="pipeline-items">
+  <div class="item"><span class="status">&#9744;</span><span class="label"><span class="tag tag-work">WORK</span><strong>Gemspring Capital</strong> &mdash; no update since Apr 3</span><span class="meta">Follow up</span></div>
+  <div class="item"><span class="status">&#9744;</span><span class="label"><span class="tag tag-work">WORK</span><strong>Sul proposal</strong> &mdash; pending</span><span class="meta">Open</span></div>
+  <div class="item"><span class="status">&#9744;</span><span class="label"><span class="tag tag-work">WORK</span><strong>American Securities</strong> &mdash; follow-up from Apr 10 call</span><span class="meta">Open</span></div>
+  <div class="item"><span class="status">&#9744;</span><span class="label"><span class="tag tag-work">WORK</span><strong>Head of FinServ role</strong> &mdash; recruiting</span><span class="meta">Open</span></div>
+  <div class="item"><span class="status">&#9744;</span><span class="label"><span class="tag tag-work">WORK</span><strong>Office Hours lead</strong></span><span class="meta">Open</span></div>
+  <div class="item"><span class="status">&#9744;</span><span class="label"><span class="tag tag-work">WORK</span><strong>Thrive Market</strong> &mdash; 4/16 remote session, Mike leading</span><span class="meta">Apr 16</span></div>
+</div>
+
+<h3>Active Engagements (team delivering)</h3>
+<div class="card">
+  <div class="item"><span class="label">Bloomberg Media &bull; Engineer's Gate &bull; CPI &bull; TowerBrook &bull; SummitTX</span></div>
+</div>
+
+<h3>Personal</h3>
+<div class="card" id="personal-items">
+  <div class="item"><span class="status">&#9744;</span><span class="label"><span class="tag tag-personal">PERSONAL</span><strong>Colombian passport</strong> &mdash; daily 9 AM booking attempts this week. Target: Apr 20-24</span><span class="meta">Daily</span></div>
+  <div class="item"><span class="status">&#9744;</span><span class="label"><span class="tag tag-personal">PERSONAL</span><strong>Juanita payment</strong> &mdash; pending</span><span class="meta">Open</span></div>
+  <div class="item"><span class="status">&#9744;</span><span class="label"><span class="tag tag-personal">PERSONAL</span><strong>Egg freezing research</strong> &mdash; target Jul/Aug 2026</span><span class="meta">Q3</span></div>
+</div>
+
+<h2>Bills</h2>
+<div class="card">
+  <table>
+    <tr><th>Vendor</th><th>Amount</th><th>Due</th><th>Status</th></tr>
+    <tr><td>Chase CC</td><td>TBD</td><td>Apr 10</td><td style="color:var(--red)">OVERDUE &mdash; unconfirmed</td></tr>
+  </table>
+</div>
+
+<h2>Context</h2>
+<div class="card">
+  <div class="item"><span class="label"><strong>Peter:</strong> Miami through April 20</span></div>
+  <div class="item"><span class="label"><strong>Leo:</strong> back home as of Apr 12</span></div>
+  <div class="item"><span class="label"><strong>Location:</strong> Brooklyn, NYC</span></div>
+</div>
+
+<h2>Diary Archive</h2>
+<div class="card">
+  <ul class="diary-list" id="diary-list">
+    <li><a href="diary/2026-04-12.html">Sunday, April 12</a><div class="summary">Cook day + Leo returns. CC/Claude 101, Team Huddle with Peter. Chase CC still unconfirmed.</div></li>
+    <li><a href="diary/2026-04-11.html">Saturday, April 11</a><div class="summary">Quiet personal day. Conrad Barrett's birthday. Chase CC escalated. Leo returns tomorrow.</div></li>
+    <li><a href="diary/2026-04-10.html">Friday, April 10</a><div class="summary">Q1 review, American Securities pipeline call, a16z Demo Day. Chase CC due. Talbot gap Apr 8-9.</div></li>
+    <li><a href="diary/2026-04-07.html">Monday, April 7</a><div class="summary">Q2 Week 1. Cerity Partners, recruiting, 520 Clinton eve meeting. No meal prep 2nd week.</div></li>
+    <li><a href="diary/2026-04-06.html">Sunday, April 6</a><div class="summary">Working Sunday. TowerBrook, Pennybacker, BenchSci, SummitTX pipeline calls.</div></li>
+    <li><a href="diary/2026-04-05.html">Sunday, April 5</a><div class="summary">Rest after Planetarium. Claude Code session. Skipped cook day. Talbot missed 6PM brief.</div></li>
+    <li><a href="diary/2026-04-04.html">Saturday, April 4</a><div class="summary">The Met, lunch UES, Planetarium deep listening in Ridgewood. No work.</div></li>
+    <li><a href="diary/2026-04-03.html">Friday, April 3</a><div class="summary">Q1 Review, Gemspring pipeline call, Cotulla, MARI. Session reset requested.</div></li>
+    <li><a href="diary/2026-04-02.html">Thursday, April 2</a><div class="summary">MISSED BY TALBOT. EG in-person, Blue Note jazz, rent due. Context degraded.</div></li>
+    <li><a href="diary/2026-04-01.html">Wednesday, April 1</a><div class="summary">Q2 Day 1. CVC rescheduled, security hook built, chicken cooked.</div></li>
+    <li><a href="diary/2026-03-31.html">Tuesday, March 31</a><div class="summary">Q1 last day. 10 meetings, axios security incident, CVC deal call.</div></li>
+    <li><a href="diary/2026-03-30.html">Monday, March 30</a><div class="summary">First workday. Brief refined, priorities reordered, World Cup planned.</div></li>
+    <li><a href="diary/2026-03-29.html">Saturday, March 29</a><div class="summary">First Telegram day. Major setup, priorities reordered, meal prep launched.</div></li>
+  </ul>
+</div>
+
+<div class="nav">
+  <a href="diary/">Full Diary Archive</a>
+</div>
+
+<script>
+  document.getElementById('updated').textContent = 'Updated: ' + new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+</script>
+</body>
+</html>
