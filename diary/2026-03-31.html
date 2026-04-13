@@ -3,83 +3,187 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Diary — 2026-03-31</title>
+<title>Diary &mdash; March 31, 2026</title>
 <style>
-:root { --bg: #0d1117; --card: #161b22; --border: #30363d; --text: #c9d1d9; --muted: #8b949e; --accent: #58a6ff; --green: #3fb950; --yellow: #d29922; --red: #f85149; --purple: #bc8cff; }
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding: 20px; max-width: 900px; margin: 0 auto; }
-h1 { font-size: 1.4em; font-weight: 600; margin-bottom: 4px; }
-h2 { font-size: 1.1em; font-weight: 600; color: var(--accent); margin: 24px 0 12px; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
-h3 { font-size: 0.95em; font-weight: 600; color: var(--muted); margin: 16px 0 8px; }
-.header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 20px; border-bottom: 2px solid var(--accent); padding-bottom: 12px; }
-.header .date { color: var(--muted); font-size: 0.9em; }
-.card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-bottom: 12px; }
-.nav { display: flex; gap: 16px; margin-top: 32px; padding-top: 16px; border-top: 1px solid var(--border); }
-.nav a { color: var(--accent); text-decoration: none; font-size: 0.9em; }
-.nav a:hover { text-decoration: underline; }
-ul, ol { padding-left: 20px; }
-li { margin-bottom: 6px; }
-strong { color: #e6edf3; }
-.tag { display: inline-block; font-size: 0.75em; font-weight: 600; padding: 2px 8px; border-radius: 12px; margin-right: 6px; }
-.tag-urgent { background: rgba(248,81,73,0.15); color: var(--red); }
-.tag-work { background: rgba(88,166,255,0.15); color: var(--accent); }
-.tag-personal { background: rgba(188,140,255,0.15); color: var(--purple); }
-.tag-perf { background: rgba(210,153,34,0.15); color: var(--yellow); }
-@media (max-width: 600px) { body { padding: 12px; } }
-.summary { color: var(--muted); font-size: 0.95em; margin-bottom: 20px; }
+  @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600&display=swap');
+
+  :root {
+    --bg: #faf9f5;
+    --card: #ffffff;
+    --sidebar-bg: #f3f1ea;
+    --border: #e8e6dc;
+    --text: #141413;
+    --text-secondary: #5c5a52;
+    --muted: #8a877d;
+    --accent: #d97757;
+    --accent-hover: #bd5d3a;
+    --green: #5a7a3a;
+    --yellow: #a67c37;
+    --red: #c4473a;
+    --purple: #7c6a99;
+    --sidebar-w: 280px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Lora', Georgia, 'Times New Roman', serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .layout { display: flex; min-height: 100vh; }
+
+  .sidebar {
+    width: var(--sidebar-w);
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--border);
+    padding: 32px 0;
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    overflow-y: auto;
+    z-index: 100;
+    transition: transform 0.35s cubic-bezier(.77,0,.175,1);
+  }
+
+  .sidebar-header { padding: 0 24px 24px; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
+  .sidebar-header h1 { font-family: 'Lora', Georgia, serif; font-size: 1.25em; font-weight: 600; color: var(--text); letter-spacing: -0.01em; }
+  .sidebar-header .subtitle { font-family: 'Inter', system-ui, sans-serif; font-size: 0.75em; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.08em; }
+  .sidebar-section { padding: 12px 24px 8px; font-family: 'Inter', system-ui, sans-serif; font-size: 0.7em; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+  .sidebar-nav { list-style: none; }
+  .sidebar-nav li a { display: block; padding: 8px 24px; font-family: 'Inter', system-ui, sans-serif; font-size: 0.85em; color: var(--text-secondary); text-decoration: none; transition: all 0.2s ease; border-left: 3px solid transparent; }
+  .sidebar-nav li a:hover { background: rgba(217,119,87,0.08); color: var(--accent); border-left-color: var(--accent); }
+  .sidebar-nav li a.active { background: rgba(217,119,87,0.1); color: var(--accent); font-weight: 500; border-left-color: var(--accent); }
+  .sidebar-nav li .day { font-size: 0.8em; color: var(--muted); }
+
+  .main { margin-left: var(--sidebar-w); flex: 1; padding: 40px 48px; max-width: 800px; }
+
+  .hamburger { display: none; position: fixed; top: 16px; left: 16px; z-index: 200; width: 40px; height: 40px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; cursor: pointer; align-items: center; justify-content: center; flex-direction: column; gap: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+  .hamburger span { display: block; width: 18px; height: 2px; background: var(--text); border-radius: 2px; transition: all 0.3s ease; }
+
+  .overlay { display: none; position: fixed; inset: 0; background: rgba(20,20,19,0.3); z-index: 90; opacity: 0; transition: opacity 0.35s ease; }
+  .overlay.active { display: block; opacity: 1; }
+
+  .page-title { font-family: 'Lora', Georgia, serif; font-size: 1.6em; font-weight: 600; color: var(--text); margin-bottom: 4px; letter-spacing: -0.02em; }
+  .page-date { font-family: 'Inter', system-ui, sans-serif; font-size: 0.85em; color: var(--muted); margin-bottom: 32px; }
+
+  h2 { font-family: 'Lora', Georgia, serif; font-size: 1.15em; font-weight: 600; color: var(--text); margin: 36px 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  h3 { font-family: 'Inter', system-ui, sans-serif; font-size: 0.8em; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin: 20px 0 10px; }
+
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 12px; }
+  .card ul { padding-left: 20px; }
+  .card li { margin-bottom: 6px; font-size: 0.95em; }
+  .card p { font-size: 0.95em; }
+
+  .item { padding: 10px 0; border-bottom: 1px solid var(--border); display: flex; align-items: baseline; gap: 10px; font-size: 0.95em; }
+  .item:last-child { border-bottom: none; }
+  .item .label { flex: 1; }
+  .item .meta { font-family: 'Inter', system-ui, sans-serif; color: var(--muted); font-size: 0.8em; white-space: nowrap; }
+
+  .tag { display: inline-block; font-family: 'Inter', system-ui, sans-serif; font-size: 0.7em; font-weight: 600; padding: 2px 8px; border-radius: 12px; margin-right: 6px; letter-spacing: 0.02em; }
+  .tag-urgent { background: rgba(196,71,58,0.1); color: var(--red); }
+  .tag-work { background: rgba(217,119,87,0.12); color: var(--accent); }
+  .tag-personal { background: rgba(124,106,153,0.12); color: var(--purple); }
+  .tag-done { background: rgba(90,122,58,0.12); color: var(--green); }
+
+  .context-row { display: flex; gap: 12px; flex-wrap: wrap; }
+  .context-pill { font-family: 'Inter', system-ui, sans-serif; font-size: 0.85em; padding: 8px 16px; background: var(--sidebar-bg); border-radius: 20px; color: var(--text-secondary); }
+  .context-pill strong { color: var(--text); }
+
+  @media (max-width: 768px) {
+    .hamburger { display: flex; }
+    .sidebar { transform: translateX(-100%); }
+    .sidebar.open { transform: translateX(0); }
+    .main { margin-left: 0; padding: 24px 20px; padding-top: 72px; }
+    .context-row { flex-direction: column; gap: 8px; }
+  }
 </style>
 </head>
 <body>
-<div class="header">
-  <h1>Tuesday, March 31</h1>
-  <span class="date">2026-03-31</span>
-</div>
-<div class="summary">Q1 last day. 10 meetings, axios security incident, CVC deal call.</div>
 
-<h2>Key Events</h2>
-<div class="card">
-  <ul>
-    <li><strong>7-8:15 AM</strong> — Chicken baked</li>
-    <li>Full day: EG sync, TowerBrook, AI Editorial, Raptive, Ron sync, Keeley/Pods, CVC/Lalit/Brooker</li>
-    <li>Finance check-in skipped</li>
-  </ul>
+<button class="hamburger" onclick="toggleSidebar()" aria-label="Menu">
+  <span></span><span></span><span></span>
+</button>
+
+<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h1>Talbot</h1>
+      <div class="subtitle">Chief of Staff</div>
+    </div>
+
+    <div class="sidebar-section">Dashboard</div>
+    <ul class="sidebar-nav">
+      <li><a href="../index.html">Today</a></li>
+    </ul>
+
+    <div class="sidebar-section">Diary</div>
+    <ul class="sidebar-nav">
+      <li><a href="2026-04-12.html">Apr 12 <span class="day">Sun</span></a></li>
+      <li><a href="2026-04-11.html">Apr 11 <span class="day">Sat</span></a></li>
+      <li><a href="2026-04-10.html">Apr 10 <span class="day">Fri</span></a></li>
+      <li><a href="2026-04-07.html">Apr 7 <span class="day">Mon</span></a></li>
+      <li><a href="2026-04-06.html">Apr 6 <span class="day">Sun</span></a></li>
+      <li><a href="2026-04-05.html">Apr 5 <span class="day">Sun</span></a></li>
+      <li><a href="2026-04-04.html">Apr 4 <span class="day">Sat</span></a></li>
+      <li><a href="2026-04-03.html">Apr 3 <span class="day">Fri</span></a></li>
+      <li><a href="2026-04-02.html">Apr 2 <span class="day">Thu</span></a></li>
+      <li><a href="2026-04-01.html">Apr 1 <span class="day">Wed</span></a></li>
+      <li><a href="2026-03-31.html" class="active">Mar 31 <span class="day">Tue</span></a></li>
+      <li><a href="2026-03-30.html">Mar 30 <span class="day">Mon</span></a></li>
+      <li><a href="2026-03-29.html">Mar 29 <span class="day">Sat</span></a></li>
+    </ul>
+  </aside>
+
+  <main class="main">
+    <div class="page-title">Tuesday, March 31</div>
+    <div class="page-date">2026-03-31 &mdash; Q1 last day. 10 meetings, axios security incident, CVC deal call.</div>
+
+    <h2>Key Events</h2>
+    <div class="card">
+      <div class="item"><span class="label"><strong>7-8:15 AM</strong> &mdash; Chicken baked</span></div>
+      <div class="item"><span class="label"><span class="tag tag-work">WORK</span>Full day: EG sync, TowerBrook, AI Editorial, Raptive, Ron sync, Keeley/Pods, CVC/Lalit/Brooker</span></div>
+      <div class="item"><span class="label">Finance check-in skipped</span></div>
+    </div>
+
+    <h2>Security Incident</h2>
+    <div class="card">
+      <div class="item"><span class="label"><span class="tag tag-urgent">SECURITY</span>Axios supply chain attack detected</span></div>
+      <div class="item"><span class="label">Status: <strong>NOT compromised</strong></span></div>
+      <div class="item"><span class="label">Pinned axios@1.13.5, gws@0.22.3</span></div>
+      <div class="item"><span class="label">No-install rule added to operating manual</span></div>
+    </div>
+
+    <h2>Pipeline</h2>
+    <div class="card">
+      <div class="item"><span class="label"><span class="tag tag-work">DEAL</span>CVC call happened (March KPI)</span></div>
+      <div class="item"><span class="label">Arianna Chan / Office Hours lead surfaced</span></div>
+    </div>
+
+    <h2>Carries Forward</h2>
+    <div class="card">
+      <div class="context-row">
+        <span class="context-pill">March revenue</span>
+        <span class="context-pill">Finance check-in (Maytal house)</span>
+        <span class="context-pill">Passport</span>
+        <span class="context-pill">Sul proposal</span>
+        <span class="context-pill">FinServ role</span>
+        <span class="context-pill">Juanita</span>
+        <span class="context-pill">Office Hours lead</span>
+      </div>
+    </div>
+  </main>
 </div>
 
-<h2>Security Incident</h2>
-<div class="card">
-  <ul>
-    <li><span class="tag tag-urgent">Security</span> Axios supply chain attack detected</li>
-    <li>Status: <strong>NOT compromised</strong></li>
-    <li>Pinned axios@1.13.5, gws@0.22.3</li>
-    <li>No-install rule added to operating manual</li>
-  </ul>
-</div>
-
-<h2>Pipeline</h2>
-<div class="card">
-  <ul>
-    <li><span class="tag tag-work">Deal</span> CVC call happened (March KPI)</li>
-    <li>Arianna Chan / Office Hours lead surfaced</li>
-  </ul>
-</div>
-
-<h2>Carries Forward</h2>
-<div class="card">
-  <ul>
-    <li>March revenue</li>
-    <li>Finance check-in (Maytal house)</li>
-    <li>Passport</li>
-    <li>Sul proposal</li>
-    <li>FinServ role</li>
-    <li>Juanita</li>
-    <li>Office Hours lead</li>
-  </ul>
-</div>
-
-<div class="nav">
-  <a href="2026-03-30.html">&lt; Previous</a>
-  <a href="index.html">Diary Index</a>
-  <a href="2026-04-01.html">Next &gt;</a>
-</div>
+<script>
+  function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('overlay').classList.toggle('active');
+  }
+</script>
 </body>
 </html>
