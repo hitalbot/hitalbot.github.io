@@ -18,6 +18,7 @@
     --accent: #d97757;
     --accent-hover: #bd5d3a;
     --green: #5a7a3a;
+    --green-bg: rgba(90,122,58,0.08);
     --yellow: #a67c37;
     --red: #c4473a;
     --purple: #7c6a99;
@@ -50,9 +51,8 @@
   }
 
   .sidebar-header { padding: 0 24px 24px; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
-  .sidebar-header h1 { font-family: 'Lora', Georgia, serif; font-size: 1.25em; font-weight: 600; color: var(--text); letter-spacing: -0.01em; }
+  .sidebar-header h1 { font-family: 'Lora', Georgia, serif; font-size: 1.25em; font-weight: 600; }
   .sidebar-header .subtitle { font-family: 'Inter', system-ui, sans-serif; font-size: 0.75em; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.08em; }
-
   .sidebar-section { padding: 12px 24px 8px; font-family: 'Inter', system-ui, sans-serif; font-size: 0.7em; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
   .sidebar-nav { list-style: none; }
   .sidebar-nav li a { display: block; padding: 8px 24px; font-family: 'Inter', system-ui, sans-serif; font-size: 0.85em; color: var(--text-secondary); text-decoration: none; transition: all 0.2s ease; border-left: 3px solid transparent; }
@@ -60,24 +60,21 @@
   .sidebar-nav li a.active { background: rgba(217,119,87,0.1); color: var(--accent); font-weight: 500; border-left-color: var(--accent); }
   .sidebar-nav li .day { font-size: 0.8em; color: var(--muted); }
 
-  .main { margin-left: var(--sidebar-w); flex: 1; padding: 40px 48px; max-width: 900px; }
+  .main { margin-left: var(--sidebar-w); flex: 1; padding: 40px 48px; max-width: 960px; }
 
   .hamburger { display: none; position: fixed; top: 16px; left: 16px; z-index: 200; width: 40px; height: 40px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; cursor: pointer; align-items: center; justify-content: center; flex-direction: column; gap: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
   .hamburger span { display: block; width: 18px; height: 2px; background: var(--text); border-radius: 2px; }
   .overlay { display: none; position: fixed; inset: 0; background: rgba(20,20,19,0.3); z-index: 90; }
   .overlay.active { display: block; }
 
-  .page-title { font-family: 'Lora', Georgia, serif; font-size: 1.6em; font-weight: 600; color: var(--text); margin-bottom: 4px; letter-spacing: -0.02em; }
-  .page-date { font-family: 'Inter', system-ui, sans-serif; font-size: 0.85em; color: var(--muted); margin-bottom: 8px; }
-  .page-subtitle { font-family: 'Inter', system-ui, sans-serif; font-size: 0.85em; color: var(--text-secondary); margin-bottom: 32px; }
+  .page-title { font-family: 'Lora', Georgia, serif; font-size: 1.6em; font-weight: 600; margin-bottom: 4px; letter-spacing: -0.02em; }
+  .page-date { font-family: 'Inter', system-ui, sans-serif; font-size: 0.85em; color: var(--muted); margin-bottom: 24px; }
 
-  h2 { font-family: 'Lora', Georgia, serif; font-size: 1.15em; font-weight: 600; color: var(--text); margin: 36px 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
-  h3 { font-family: 'Inter', system-ui, sans-serif; font-size: 0.8em; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin: 20px 0 10px; }
-
-  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 12px; }
-
-  .stats-row { display: flex; gap: 2px; border-radius: 12px; overflow: hidden; margin-bottom: 24px; }
-  .stats-row .stat { flex: 1; text-align: center; padding: 16px 12px; background: var(--sidebar-bg); }
+  /* --- Stats --- */
+  .stats-row { display: flex; gap: 2px; border-radius: 12px; overflow: hidden; margin-bottom: 20px; }
+  .stats-row .stat { flex: 1; text-align: center; padding: 16px 12px; background: var(--sidebar-bg); cursor: pointer; transition: all 0.2s; user-select: none; }
+  .stats-row .stat:hover { filter: brightness(0.96); }
+  .stats-row .stat.active-filter { box-shadow: inset 0 -3px 0 var(--accent); }
   .stats-row .stat:first-child { border-radius: 12px 0 0 12px; }
   .stats-row .stat:last-child { border-radius: 0 12px 12px 0; }
   .stats-row .num { font-family: 'Lora', Georgia, serif; font-size: 1.5em; font-weight: 700; }
@@ -87,14 +84,53 @@
   .stats-row .num.blue { color: var(--blue); }
   .stats-row .slabel { font-family: 'Inter', system-ui, sans-serif; font-size: 0.7em; color: var(--muted); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.06em; }
 
-  .task { padding: 12px 0; border-bottom: 1px solid var(--border); }
-  .task:last-child { border-bottom: none; }
-  .task-header { display: flex; align-items: baseline; gap: 10px; }
-  .task-name { font-weight: 600; flex: 1; font-size: 0.95em; }
-  .task-meta { font-family: 'Inter', system-ui, sans-serif; color: var(--muted); font-size: 0.75em; white-space: nowrap; }
-  .task-detail { font-size: 0.85em; color: var(--text-secondary); margin-top: 4px; padding-left: 2px; }
+  /* --- Filter bar --- */
+  .filter-bar {
+    display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; align-items: center;
+  }
+  .filter-btn {
+    font-family: 'Inter', system-ui, sans-serif; font-size: 0.78em; font-weight: 500;
+    padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border);
+    background: var(--card); color: var(--text-secondary); cursor: pointer; transition: all 0.2s;
+    user-select: none;
+  }
+  .filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .filter-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+  .filter-label { font-family: 'Inter', system-ui, sans-serif; font-size: 0.72em; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-right: 4px; }
 
-  .tag { display: inline-block; font-family: 'Inter', system-ui, sans-serif; font-size: 0.65em; font-weight: 600; padding: 2px 8px; border-radius: 12px; margin-right: 6px; letter-spacing: 0.02em; vertical-align: middle; }
+  /* --- Section --- */
+  .section-header {
+    font-family: 'Lora', Georgia, serif; font-size: 1.15em; font-weight: 600;
+    margin: 32px 0 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border);
+  }
+  .section-header .count {
+    font-family: 'Inter', system-ui, sans-serif; font-size: 0.65em; color: var(--muted);
+    font-weight: 500; margin-left: 8px;
+  }
+
+  /* --- Task card --- */
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 8px; overflow: hidden; transition: all 0.25s; }
+  .card.completed-card { background: var(--green-bg); border-color: rgba(90,122,58,0.2); }
+  .card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+
+  .task-row { display: flex; align-items: flex-start; padding: 14px 16px; gap: 12px; }
+
+  .task-check {
+    width: 22px; height: 22px; border-radius: 6px; border: 2px solid var(--border);
+    cursor: pointer; flex-shrink: 0; margin-top: 3px; display: flex; align-items: center;
+    justify-content: center; transition: all 0.2s; background: var(--card);
+  }
+  .task-check:hover { border-color: var(--green); background: rgba(90,122,58,0.08); }
+  .task-check.checked { background: var(--green); border-color: var(--green); }
+  .task-check.checked::after { content: '✓'; color: white; font-size: 13px; font-weight: 700; }
+
+  .task-body { flex: 1; min-width: 0; }
+  .task-title { font-weight: 600; font-size: 0.95em; display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+  .task-title.done-title { text-decoration: line-through; color: var(--muted); }
+  .task-detail { font-size: 0.84em; color: var(--text-secondary); margin-top: 3px; line-height: 1.6; }
+  .task-meta-line { font-family: 'Inter', system-ui, sans-serif; font-size: 0.72em; color: var(--muted); margin-top: 6px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+
+  .tag { display: inline-block; font-family: 'Inter', system-ui, sans-serif; font-size: 0.65em; font-weight: 600; padding: 2px 8px; border-radius: 12px; letter-spacing: 0.02em; white-space: nowrap; }
   .tag-overdue { background: rgba(196,71,58,0.15); color: var(--red); }
   .tag-urgent { background: rgba(196,71,58,0.1); color: var(--red); }
   .tag-progress { background: rgba(217,119,87,0.12); color: var(--accent); }
@@ -104,17 +140,84 @@
   .tag-done { background: rgba(90,122,58,0.15); color: var(--green); }
   .tag-unknown { background: rgba(138,135,125,0.12); color: var(--muted); }
   .tag-infra { background: rgba(124,106,153,0.12); color: var(--purple); }
+  .tag-dropped { background: rgba(138,135,125,0.08); color: var(--muted); }
 
-  .done { text-decoration: line-through; color: var(--muted); }
+  /* --- Action buttons --- */
+  .task-actions { display: flex; gap: 4px; flex-shrink: 0; align-items: flex-start; margin-top: 2px; }
+
+  .act-btn {
+    font-family: 'Inter', system-ui, sans-serif; font-size: 0.7em; font-weight: 500;
+    padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border);
+    background: var(--card); color: var(--text-secondary); cursor: pointer; transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .act-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .act-btn.act-done { border-color: rgba(90,122,58,0.3); color: var(--green); }
+  .act-btn.act-done:hover { background: var(--green); color: white; }
+
+  /* --- Status dropdown --- */
+  .status-select {
+    font-family: 'Inter', system-ui, sans-serif; font-size: 0.7em;
+    padding: 4px 6px; border-radius: 6px; border: 1px solid var(--border);
+    background: var(--card); color: var(--text-secondary); cursor: pointer;
+    appearance: auto;
+  }
+
+  /* --- Note input --- */
+  .note-area {
+    padding: 0 16px 12px; display: none;
+  }
+  .note-area.open { display: block; }
+  .note-input {
+    width: 100%; font-family: 'Inter', system-ui, sans-serif; font-size: 0.82em;
+    padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px;
+    background: var(--bg); color: var(--text); resize: vertical; min-height: 36px;
+    line-height: 1.5;
+  }
+  .note-input:focus { outline: none; border-color: var(--accent); }
+  .note-display {
+    font-family: 'Inter', system-ui, sans-serif; font-size: 0.8em;
+    padding: 8px 12px; background: rgba(217,119,87,0.05); border-radius: 8px;
+    color: var(--text-secondary); margin: 0 16px 12px; border-left: 3px solid var(--accent);
+    white-space: pre-wrap;
+  }
+
+  /* --- Toast --- */
+  .toast {
+    position: fixed; bottom: 24px; right: 24px; background: var(--text); color: white;
+    font-family: 'Inter', system-ui, sans-serif; font-size: 0.85em; padding: 12px 20px;
+    border-radius: 10px; box-shadow: 0 4px 16px rgba(0,0,0,0.15); z-index: 999;
+    opacity: 0; transform: translateY(10px); transition: all 0.3s; pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+
+  /* --- Footer --- */
+  .footer {
+    margin-top: 40px; padding: 16px 0; border-top: 1px solid var(--border);
+    font-family: 'Inter', system-ui, sans-serif; font-size: 0.75em; color: var(--muted);
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;
+  }
+  .reset-btn {
+    font-family: 'Inter', system-ui, sans-serif; font-size: 1em; color: var(--muted);
+    background: none; border: 1px solid var(--border); border-radius: 6px; padding: 4px 12px;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .reset-btn:hover { border-color: var(--red); color: var(--red); }
+
+  .hidden { display: none !important; }
 
   @media (max-width: 768px) {
     .hamburger { display: flex; }
     .sidebar { transform: translateX(-100%); }
     .sidebar.open { transform: translateX(0); }
-    .main { margin-left: 0; padding: 24px 20px; padding-top: 72px; }
-    .stats-row { flex-direction: column; gap: 1px; }
-    .stats-row .stat:first-child { border-radius: 12px 12px 0 0; }
-    .stats-row .stat:last-child { border-radius: 0 0 12px 12px; }
+    .main { margin-left: 0; padding: 24px 16px; padding-top: 72px; }
+    .stats-row { flex-wrap: wrap; }
+    .stats-row .stat { min-width: 48%; }
+    .stats-row .stat:first-child { border-radius: 12px 0 0 0; }
+    .stats-row .stat:nth-child(2) { border-radius: 0 12px 0 0; }
+    .stats-row .stat:nth-child(3) { border-radius: 0 0 0 12px; }
+    .stats-row .stat:last-child { border-radius: 0 0 12px 0; }
+    .task-actions { flex-wrap: wrap; }
   }
 </style>
 </head>
@@ -123,7 +226,6 @@
 <button class="hamburger" onclick="toggleSidebar()" aria-label="Menu">
   <span></span><span></span><span></span>
 </button>
-
 <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
 
 <div class="layout">
@@ -132,13 +234,11 @@
       <h1>Talbot</h1>
       <div class="subtitle">Chief of Staff</div>
     </div>
-
     <div class="sidebar-section">Dashboard</div>
     <ul class="sidebar-nav">
       <li><a href="index.html">Today</a></li>
       <li><a href="tasks.html" class="active">Task Tracker</a></li>
     </ul>
-
     <div class="sidebar-section">Diary</div>
     <ul class="sidebar-nav">
       <li><a href="diary/2026-04-14.html">Apr 14 <span class="day">Tue</span></a></li>
@@ -160,419 +260,394 @@
   </aside>
 
   <main class="main">
-    <div class="page-title">Master Task Tracker</div>
+    <div class="page-title">Task Tracker</div>
     <div class="page-date" id="updated"></div>
-    <div class="page-subtitle">Every to-do, idea, and action item — nothing falls through the cracks.</div>
 
-    <div class="stats-row">
-      <div class="stat"><div class="num red">3</div><div class="slabel">Overdue / Urgent</div></div>
-      <div class="stat"><div class="num yellow">8</div><div class="slabel">Pipeline Stale</div></div>
-      <div class="stat"><div class="num blue">14</div><div class="slabel">Open</div></div>
-      <div class="stat"><div class="num green">13</div><div class="slabel">Done</div></div>
-    </div>
-
-    <!-- ═══════════════════════════════════ -->
-    <h2>🔴 Overdue &amp; Urgent</h2>
-    <!-- ═══════════════════════════════════ -->
-
-    <div class="card">
-      <div class="task">
-        <div class="task-header">
-          <span class="task-name"><span class="tag tag-overdue">OVERDUE</span> Chase CC payment</span>
-          <span class="task-meta">Due Apr 10 · Day 4</span>
-        </div>
-        <div class="task-detail">Payment not confirmed. 4 days overdue. Need to check if autopay caught it or pay manually. First flagged Apr 10.</div>
+    <div class="stats-row" id="stats-row">
+      <div class="stat" data-filter="urgent" onclick="toggleStatFilter('urgent')">
+        <div class="num red" id="stat-urgent">0</div>
+        <div class="slabel">Urgent</div>
       </div>
-
-      <div class="task">
-        <div class="task-header">
-          <span class="task-name"><span class="tag tag-urgent">URGENT</span> Meal prep — 2+ weeks without cooking</span>
-          <span class="task-meta">Since Mar 29</span>
-        </div>
-        <div class="task-detail">Cook day skipped Apr 5, Apr 6, Apr 12. Single cook Apr 13 (streak: 1). Full meal prep system not functioning — Friday planning and Sunday cooking both falling through.</div>
+      <div class="stat" data-filter="stale" onclick="toggleStatFilter('stale')">
+        <div class="num yellow" id="stat-stale">0</div>
+        <div class="slabel">Stale</div>
       </div>
-
-      <div class="task">
-        <div class="task-header">
-          <span class="task-name"><span class="tag tag-urgent">URGENT</span> Miami rent ($3,900, 5 Island 15G)</span>
-          <span class="task-meta">Due Apr 2 · Unknown</span>
-        </div>
-        <div class="task-detail">Due April 2, day was untracked by Talbot (gap Apr 2-9). Payment status never confirmed. Need to verify.</div>
+      <div class="stat" data-filter="open" onclick="toggleStatFilter('open')">
+        <div class="num blue" id="stat-open">0</div>
+        <div class="slabel">Open</div>
+      </div>
+      <div class="stat" data-filter="done" onclick="toggleStatFilter('done')">
+        <div class="num green" id="stat-done">0</div>
+        <div class="slabel">Done</div>
       </div>
     </div>
 
-    <!-- ═══════════════════════════════════ -->
-    <h2>🟠 Personal — In Progress</h2>
-    <!-- ═══════════════════════════════════ -->
-
-    <div class="card">
-      <div class="task">
-        <div class="task-header">
-          <span class="task-name"><span class="tag tag-progress">IN PROGRESS</span> Colombian passport renewal</span>
-          <span class="task-meta">Since Mar 29</span>
-        </div>
-        <div class="task-detail">Expired passport. Facial capture DONE Apr 14. Portal ready. CronJob fires daily at 8:55 AM for 9 AM booking slot, Tue-Fri this week. Target: Wed Apr 22 appointment. Backup: Sat Apr 25 jornada in Brentwood, LI. Bring cedula + expired passport + ~$82 cash.</div>
-      </div>
-
-      <div class="task">
-        <div class="task-header">
-          <span class="task-name"><span class="tag tag-progress">IN PROGRESS</span> Juanita payment</span>
-          <span class="task-meta">Since Mar 29</span>
-        </div>
-        <div class="task-detail">Pending since day one. No details on amount or method. Carried forward across 15+ diary entries. Never confirmed paid.</div>
-      </div>
+    <div class="filter-bar">
+      <span class="filter-label">Show:</span>
+      <button class="filter-btn active" data-cat="all" onclick="setFilter('all')">All</button>
+      <button class="filter-btn" data-cat="personal" onclick="setFilter('personal')">Personal</button>
+      <button class="filter-btn" data-cat="work" onclick="setFilter('work')">Work</button>
+      <button class="filter-btn" data-cat="finance" onclick="setFilter('finance')">Finance</button>
+      <button class="filter-btn" data-cat="travel" onclick="setFilter('travel')">Travel</button>
+      <button class="filter-btn" data-cat="infra" onclick="setFilter('infra')">Infra</button>
     </div>
 
-    <!-- ═══════════════════════════════════ -->
-    <h2>🟣 Personal — Open</h2>
-    <!-- ═══════════════════════════════════ -->
+    <div id="task-container"></div>
 
-    <div class="card">
-      <div class="task">
-        <div class="task-header">
-          <span class="task-name"><span class="tag tag-open">OPEN</span> Egg freezing research</span>
-          <span class="task-meta">Target Jul/Aug 2026</span>
-        </div>
-        <div class="task-detail">Fertility priority. Target timeline July/August 2026. No active steps taken yet. Needs clinic research, consultations, timeline planning.</div>
-      </div>
-
-      <div class="task">
-        <div class="task-header">
-          <span class="task-name"><span class="tag tag-open">OPEN</span> Dad visit flights to Bogota</span>
-          <span class="task-meta">Target late April</span>
-        </div>
-        <div class="task-detail">Dad is 81, in Bogota. Goal: 3 visits/year. Late April target mentioned Mar 29, no follow-up. Passport renewal may affect timing.</div>
-      </div>
-
-      <div class="task">
-        <div class="task-header">
-          <span class="task-name"><span class="tag tag-open">OPEN</span> GoDaddy: JSQPHOTOGRAPHY.COM renewal</span>
-          <span class="task-meta">Due Apr 28 · $22.99</span>
-        </div>
-        <div class="task-detail">Domain renewal auto-charged $22.99 on Apr 28. Decision needed: keep or cancel? First flagged Mar 29.</div>
-      </div>
-
-      <div class="task">
-        <div class="task-header">
-          <span class="task-name"><span class="tag tag-open">OPEN</span> Maytal house offer — buy Brooklyn home?</span>
-          <span class="task-meta">Since Mar 30</span>
-        </div>
-        <div class="task-detail">Landlord asked if they want to buy. Part of the finance check-in agenda that was scheduled Mar 31 but never happened. No discussion yet.</div>
-      </div>
-
-      <div class="task">
-        <div class="task-header">
-          <span class="task-name"><span class="tag tag-open">OPEN</span> World Cup: Colombia vs Portugal, Jun 27</span>
-          <span class="task-meta">Hard Rock Stadium</span>
-        </div>
-        <div class="task-detail">Family trip to Miami for the match. Need: flights for family, tickets, budget. Mentioned Mar 30, no follow-up.</div>
-      </div>
-
-      <div class="task">
-        <div class="task-header">
-          <span class="task-name"><span class="tag tag-open">OPEN</span> Vacation planning — Bogota late April</span>
-          <span class="task-meta">Since Mar 30</span>
-        </div>
-        <div class="task-detail">Recommendation made for Bogota late April. No action taken. May overlap with dad visit and passport renewal timeline.</div>
-      </div>
-
-      <div class="task">
-        <div class="task-header">
-          <span class="task-name"><span class="tag tag-open">OPEN</span> Buy vinegar on Amazon</span>
-          <span class="task-meta">Since Mar 29</span>
-        </div>
-        <div class="task-detail">Carried forward from Mar 29 through Apr 3, then dropped. Never confirmed purchased.</div>
-      </div>
-
-      <div class="task">
-        <div class="task-header">
-          <span class="task-name"><span class="tag tag-open">OPEN</span> Fix leak at home — call plumber</span>
-          <span class="task-meta">Since Mar 29</span>
-        </div>
-        <div class="task-detail">Plumber was scheduled for Apr 2, but that day was untracked. Unknown if plumber came or leak was fixed.</div>
-      </div>
-    </div>
-
-    <!-- ═══════════════════════════════════ -->
-    <h2>🔵 Work — Pipeline &amp; Deals</h2>
-    <!-- ═══════════════════════════════════ -->
-
-    <div class="card">
-      <div class="task">
-        <div class="task-header">
-          <span class="task-name"><span class="tag tag-stale">STALE 11d</span> Gemspring Capital</span>
-          <span class="task-meta">Last: Apr 3</span>
-        </div>
-        <div class="task-detail">Pipeline call happened Apr 3. No update since. 11 days stale. Needs follow-up.</div>
-      </div>
-
-      <div class="task">
-        <div class="task-header">
-          <span class="task-name"><span class="tag tag-stale">STALE</span> Sul proposal for legal</span>
-          <span class="task-meta">Since Apr 1</span>
-        </div>
-        <div class="task-detail">Not sent as of Apr 1. Carried forward through Apr 12. Never confirmed sent.</div>
-      </div>
-
-      <div class="task">
-        <div class="task-header">
-          <span class="task-name"><span class="tag tag-open">OPEN</span> American Securities — Christopher follow-up</span>
-          <span class="task-meta">Since Apr 10</span>
-        </div>
-        <div class="task-detail">Past client re-engagement. Call happened Apr 10. Follow-up needed.</div>
-      </div>
-
-      <div class="task">
-        <div class="task-header">
-          <span class="task-name"><span class="tag tag-open">OPEN</span> Head of Financial Services role</span>
-          <span class="task-meta">Recruiting</span>
-        </div>
-        <div class="task-detail">Open recruiting position. Published status unclear. Carried since Apr 1.</div>
-      </div>
-
-      <div class="task">
-        <div class="task-header">
-          <span class="task-name"><span class="tag tag-stale">STALE 14d</span> Office Hours lead — Arianna Chan</span>
-          <span class="task-meta">Since Mar 31</span>
-        </div>
-        <div class="task-detail">"International Wealth Banking Operations" — flagged for response Mar 31. Never confirmed actioned. 14 days stale.</div>
-      </div>
-
-      <div class="task">
-        <div class="task-header">
-          <span class="task-name"><span class="tag tag-stale">STALE 8d</span> Pennybacker pipeline (Austin)</span>
-          <span class="task-meta">Since Apr 6</span>
-        </div>
-        <div class="task-detail">Active conversation noted Apr 6. No follow-up logged.</div>
-      </div>
-
-      <div class="task">
-        <div class="task-header">
-          <span class="task-name"><span class="tag tag-stale">STALE 8d</span> BenchSci pipeline (Chelsea)</span>
-          <span class="task-meta">Since Apr 6</span>
-        </div>
-        <div class="task-detail">Active conversation noted Apr 6. No follow-up logged.</div>
-      </div>
-
-      <div class="task">
-        <div class="task-header">
-          <span class="task-name"><span class="tag tag-unknown">UNKNOWN</span> CVC / Lalit deal outcome</span>
-          <span class="task-meta">Call Mar 31</span>
-        </div>
-        <div class="task-detail">Call happened Mar 31 at 3 PM. Rescheduled to Apr 1 at 12:30 PM. Outcome never logged.</div>
-      </div>
-
-      <div class="task">
-        <div class="task-header">
-          <span class="task-name"><span class="tag tag-unknown">UNKNOWN</span> Hannah von Waldersee (Insight Partners)</span>
-          <span class="task-meta">Met Mar 29</span>
-        </div>
-        <div class="task-detail">Meeting went well. No next steps logged. Never followed up.</div>
-      </div>
-
-      <div class="task">
-        <div class="task-header">
-          <span class="task-name"><span class="tag tag-unknown">UNKNOWN</span> Cerity Partners (Andrew)</span>
-          <span class="task-meta">Call Apr 7</span>
-        </div>
-        <div class="task-detail">Financial planning call happened Apr 7. No outcome or follow-up logged.</div>
-      </div>
-
-      <div class="task">
-        <div class="task-header">
-          <span class="task-name"><span class="tag tag-unknown">UNKNOWN</span> Brooker go/no-go decision</span>
-          <span class="task-meta">Since Mar 29</span>
-        </div>
-        <div class="task-detail">"Top of mind" week of Mar 29. Brooker sent new contract Apr 1. Decision not confirmed.</div>
-      </div>
-
-      <div class="task">
-        <div class="task-header">
-          <span class="task-name"><span class="tag tag-upcoming">UPCOMING</span> Thrive Market session</span>
-          <span class="task-meta">Apr 16</span>
-        </div>
-        <div class="task-detail">Remote session. Mike leading. Prep call with Nick Green happened Apr 8.</div>
-      </div>
-    </div>
-
-    <!-- ═══════════════════════════════════ -->
-    <h2>💰 Finance — Unresolved</h2>
-    <!-- ═══════════════════════════════════ -->
-
-    <div class="card">
-      <div class="task">
-        <div class="task-header">
-          <span class="task-name"><span class="tag tag-stale">NEVER DONE</span> Finance check-in</span>
-          <span class="task-meta">Scheduled Mar 31</span>
-        </div>
-        <div class="task-detail">Full agenda: Maytal house offer, March revenue numbers, Q2 targets, Silvia dashboard, bill tracking. Scheduled Mar 31 at 7 PM — skipped. Carried through Apr 3. Dropped. Items never resolved.</div>
-      </div>
-
-      <div class="task">
-        <div class="task-header">
-          <span class="task-name"><span class="tag tag-unknown">UNKNOWN</span> March revenue numbers</span>
-          <span class="task-meta">Since Mar 30</span>
-        </div>
-        <div class="task-detail">Never received or confirmed. Part of finance check-in agenda.</div>
-      </div>
-
-      <div class="task">
-        <div class="task-header">
-          <span class="task-name"><span class="tag tag-unknown">UNKNOWN</span> March KPI: close 3 deals</span>
-          <span class="task-meta">Target Mar 31</span>
-        </div>
-        <div class="task-detail">CVC call happened Mar 31. Final count of deals closed in March never logged.</div>
-      </div>
-
-      <div class="task">
-        <div class="task-header">
-          <span class="task-name"><span class="tag tag-unknown">UNKNOWN</span> Silvia dashboard</span>
-          <span class="task-meta">Since Apr 1</span>
-        </div>
-        <div class="task-detail">Part of finance check-in agenda. Never addressed. Purpose/context unclear.</div>
-      </div>
-    </div>
-
-    <!-- ═══════════════════════════════════ -->
-    <h2>🗓️ Travel &amp; Upcoming Events</h2>
-    <!-- ═══════════════════════════════════ -->
-
-    <div class="card">
-      <div class="task">
-        <div class="task-header">
-          <span class="task-name"><span class="tag tag-upcoming">TOMORROW</span> LTM dinner at Baohaus, East Village</span>
-          <span class="task-meta">Apr 15 · 6:30 PM</span>
-        </div>
-        <div class="task-detail">In-person dinner. Transit lookup needed from home/office.</div>
-      </div>
-
-      <div class="task">
-        <div class="task-header">
-          <span class="task-name"><span class="tag tag-upcoming">THU</span> Flight to New Orleans from LGA</span>
-          <span class="task-meta">Apr 17 · 7:30 AM</span>
-        </div>
-        <div class="task-detail">Leave home ~5:30 AM. Leo coverage needed Thu-Sun (Peter in Miami until Apr 20).</div>
-      </div>
-
-      <div class="task">
-        <div class="task-header">
-          <span class="task-name"><span class="tag tag-upcoming">SUN</span> Flight NOLA → LA</span>
-          <span class="task-meta">Apr 20 · 9:20 PM</span>
-        </div>
-      </div>
-
-      <div class="task">
-        <div class="task-header">
-          <span class="task-name"><span class="tag tag-open">OPEN</span> Leo coverage Thu Apr 17 – Sun Apr 20</span>
-          <span class="task-meta">Needs plan</span>
-        </div>
-        <div class="task-detail">Natalia in NOLA/LA, Peter in Miami until Apr 20. Who has Leo? Need dog walker or family backup arranged.</div>
-      </div>
-
-      <div class="task">
-        <div class="task-header">
-          <span class="task-name"><span class="tag tag-upcoming">APR 21</span> 520 Clinton Ave meeting</span>
-          <span class="task-meta">7 PM</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- ═══════════════════════════════════ -->
-    <h2>🤖 Agent Infrastructure</h2>
-    <!-- ═══════════════════════════════════ -->
-
-    <div class="card">
-      <div class="task">
-        <div class="task-header">
-          <span class="task-name"><span class="tag tag-infra">INFRA</span> Twitter — connect @TalbotQuintero</span>
-          <span class="task-meta">Since Mar 31</span>
-        </div>
-        <div class="task-detail">Account exists. Integration for posting/reading not set up.</div>
-      </div>
-
-      <div class="task">
-        <div class="task-header">
-          <span class="task-name"><span class="tag tag-infra">INFRA</span> Jeska daily fundraising brief for Peter</span>
-          <span class="task-meta">Since Mar 31</span>
-        </div>
-        <div class="task-detail">Set up Peter's agent with a daily brief on seed-stage fundraising activity in NYC. Not started.</div>
-      </div>
-
-      <div class="task">
-        <div class="task-header">
-          <span class="task-name"><span class="tag tag-infra">INFRA</span> Browser access — daily use config</span>
-          <span class="task-meta">Partial</span>
-        </div>
-        <div class="task-detail">dev-browser installed. Used for passport portal. Not fully integrated for general daily use.</div>
-      </div>
-
-      <div class="task">
-        <div class="task-header">
-          <span class="task-name"><span class="tag tag-infra">INFRA</span> Separate GitHub account for Jeska</span>
-          <span class="task-meta">Deferred</span>
-        </div>
-        <div class="task-detail">Currently shared under hitalbot. Decision deferred.</div>
-      </div>
-    </div>
-
-    <!-- ═══════════════════════════════════ -->
-    <h2>✅ Completed</h2>
-    <!-- ═══════════════════════════════════ -->
-
-    <div class="card">
-      <div class="task">
-        <div class="task-header"><span class="task-name done"><span class="tag tag-done">DONE</span> Security hook (check-package-age.sh)</span><span class="task-meta">Apr 1</span></div>
-      </div>
-      <div class="task">
-        <div class="task-header"><span class="task-name done"><span class="tag tag-done">DONE</span> GitHub Pages dashboard launched</span><span class="task-meta">Apr 13</span></div>
-      </div>
-      <div class="task">
-        <div class="task-header"><span class="task-name done"><span class="tag tag-done">DONE</span> Daily-state.md live ops file created</span><span class="task-meta">Apr 13</span></div>
-      </div>
-      <div class="task">
-        <div class="task-header"><span class="task-name done"><span class="tag tag-done">DONE</span> Deal Radar fix (Jeska/OAuth/dashboard)</span><span class="task-meta">Apr 13</span></div>
-      </div>
-      <div class="task">
-        <div class="task-header"><span class="task-name done"><span class="tag tag-done">DONE</span> Zombie morning brief process killed</span><span class="task-meta">Apr 13</span></div>
-      </div>
-      <div class="task">
-        <div class="task-header"><span class="task-name done"><span class="tag tag-done">DONE</span> LaunchAgent timeout guards (10 min)</span><span class="task-meta">Apr 13</span></div>
-      </div>
-      <div class="task">
-        <div class="task-header"><span class="task-name done"><span class="tag tag-done">DONE</span> Transit awareness (dynamic lookup rules)</span><span class="task-meta">Apr 14</span></div>
-      </div>
-      <div class="task">
-        <div class="task-header"><span class="task-name done"><span class="tag tag-done">DONE</span> Week-ahead logistics framework</span><span class="task-meta">Apr 14</span></div>
-      </div>
-      <div class="task">
-        <div class="task-header"><span class="task-name done"><span class="tag tag-done">DONE</span> Solution-oriented personality rule</span><span class="task-meta">Apr 14</span></div>
-      </div>
-      <div class="task">
-        <div class="task-header"><span class="task-name done"><span class="tag tag-done">DONE</span> Passport facial capture</span><span class="task-meta">Apr 14</span></div>
-      </div>
-      <div class="task">
-        <div class="task-header"><span class="task-name done"><span class="tag tag-done">DONE</span> RTM / Rizvi Traverse kick-off</span><span class="task-meta">Apr 13</span></div>
-      </div>
-      <div class="task">
-        <div class="task-header"><span class="task-name done"><span class="tag tag-done">DONE</span> Raptive, Pods, Nick at Thrive focus block</span><span class="task-meta">Apr 1</span></div>
-      </div>
-      <div class="task">
-        <div class="task-header"><span class="task-name done"><span class="tag tag-done">DONE</span> Planetarium event (Mister Saturday Night)</span><span class="task-meta">Apr 4</span></div>
-      </div>
-    </div>
-
-    <div style="margin-top:40px; padding: 16px 0; border-top: 1px solid var(--border); font-family: 'Inter', system-ui, sans-serif; font-size: 0.75em; color: var(--muted);">
-      Audit date: April 14, 2026. Sources: 15 diary entries (Mar 29 – Apr 14), 6 project memory files, daily-state.md, session handoff notes. Every to-do, idea, and action item from Telegram conversations and Talbot operations cataloged.
+    <div class="footer">
+      <span>Audit: Apr 14, 2026 &middot; 15 diary entries, 6 project files, daily-state, handoff notes</span>
+      <button class="reset-btn" onclick="resetAll()">Reset local changes</button>
     </div>
   </main>
 </div>
 
+<div class="toast" id="toast"></div>
+
 <script>
-  document.getElementById('updated').textContent = 'Last updated: ' + new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
-  function toggleSidebar() {
-    document.getElementById('sidebar').classList.toggle('open');
-    document.getElementById('overlay').classList.toggle('active');
+// ═══════════════════════════════════════════════════
+// TASK DATA — Talbot adds new tasks here each session
+// ═══════════════════════════════════════════════════
+const TASKS = [
+  // --- URGENT ---
+  { id: "chase-cc", title: "Chase CC payment", detail: "Payment not confirmed. 4 days overdue. Need to check if autopay caught it or pay manually.", status: "overdue", category: "finance", meta: "Due Apr 10 · Day 4", since: "2026-04-10", section: "urgent" },
+  { id: "meal-prep", title: "Meal prep — 2+ weeks without cooking", detail: "Cook day skipped Apr 5, 6, 12. Single cook Apr 13 (streak: 1). Friday planning & Sunday cooking both falling through.", status: "urgent", category: "personal", meta: "Since Mar 29", since: "2026-03-29", section: "urgent" },
+  { id: "miami-rent", title: "Miami rent ($3,900, 5 Island 15G)", detail: "Due April 2, day was untracked by Talbot (gap Apr 2-9). Payment status never confirmed. Need to verify.", status: "urgent", category: "finance", meta: "Due Apr 2 · Unknown", since: "2026-04-02", section: "urgent" },
+
+  // --- IN PROGRESS ---
+  { id: "passport", title: "Colombian passport renewal", detail: "Expired. Facial capture DONE Apr 14. Portal ready. CronJob daily at 8:55 AM for 9 AM slot. Target: Wed Apr 22. Backup: Sat Apr 25 jornada in Brentwood. Bring cedula + expired passport + ~$82 cash.", status: "progress", category: "personal", meta: "Since Mar 29", since: "2026-03-29", section: "personal" },
+  { id: "juanita", title: "Juanita payment", detail: "Pending since day one. No details on amount or method. Carried forward across 15+ diary entries.", status: "progress", category: "personal", meta: "Since Mar 29", since: "2026-03-29", section: "personal" },
+
+  // --- PERSONAL OPEN ---
+  { id: "egg-freeze", title: "Egg freezing research", detail: "Fertility priority. Target July/August 2026. No active steps yet. Needs clinic research, consultations, timeline.", status: "open", category: "personal", meta: "Target Jul/Aug 2026", since: "2026-03-29", section: "personal" },
+  { id: "dad-bogota", title: "Dad visit flights to Bogota", detail: "Dad is 81, in Bogota. Goal: 3 visits/year. Late April target mentioned Mar 29, no follow-up. Passport may affect timing.", status: "open", category: "personal", meta: "Target late April", since: "2026-03-29", section: "personal" },
+  { id: "godaddy", title: "GoDaddy: JSQPHOTOGRAPHY.COM renewal", detail: "Domain renewal auto-charged $22.99 on Apr 28. Decision needed: keep or cancel?", status: "open", category: "finance", meta: "Due Apr 28 · $22.99", since: "2026-03-29", section: "personal" },
+  { id: "maytal-house", title: "Maytal house offer — buy Brooklyn home?", detail: "Landlord asked if they want to buy. Part of finance check-in that was scheduled Mar 31 but never happened.", status: "open", category: "finance", meta: "Since Mar 30", since: "2026-03-30", section: "personal" },
+  { id: "world-cup", title: "World Cup: Colombia vs Portugal, Jun 27", detail: "Hard Rock Stadium, Miami. Need: family flights, tickets, budget.", status: "open", category: "personal", meta: "Jun 27", since: "2026-03-30", section: "personal" },
+  { id: "bogota-vacation", title: "Vacation planning — Bogota late April", detail: "Recommended Bogota late April. May overlap with dad visit and passport timeline.", status: "open", category: "personal", meta: "Since Mar 30", since: "2026-03-30", section: "personal" },
+  { id: "vinegar", title: "Buy vinegar on Amazon", detail: "Carried forward Mar 29 through Apr 3, then dropped. Never confirmed purchased.", status: "open", category: "personal", meta: "Since Mar 29", since: "2026-03-29", section: "personal" },
+  { id: "plumber", title: "Fix leak at home — call plumber", detail: "Plumber was scheduled for Apr 2, but that day was untracked. Unknown if plumber came or leak fixed.", status: "unknown", category: "personal", meta: "Since Mar 29", since: "2026-03-29", section: "personal" },
+
+  // --- WORK PIPELINE ---
+  { id: "gemspring", title: "Gemspring Capital", detail: "Pipeline call happened Apr 3. No update since. 11 days stale.", status: "stale", category: "work", meta: "Last: Apr 3", since: "2026-04-03", section: "work" },
+  { id: "sul", title: "Sul proposal for legal", detail: "Not sent as of Apr 1. Carried forward through Apr 12. Never confirmed sent.", status: "stale", category: "work", meta: "Since Apr 1", since: "2026-04-01", section: "work" },
+  { id: "am-sec", title: "American Securities — Christopher follow-up", detail: "Past client re-engagement. Call happened Apr 10. Follow-up needed.", status: "open", category: "work", meta: "Since Apr 10", since: "2026-04-10", section: "work" },
+  { id: "finserv", title: "Head of Financial Services role", detail: "Open recruiting position. Published status unclear.", status: "open", category: "work", meta: "Recruiting", since: "2026-04-01", section: "work" },
+  { id: "office-hours", title: "Office Hours lead — Arianna Chan", detail: "\"International Wealth Banking Operations\" — flagged Mar 31. Never confirmed actioned.", status: "stale", category: "work", meta: "Since Mar 31 · 14 days", since: "2026-03-31", section: "work" },
+  { id: "pennybacker", title: "Pennybacker pipeline (Austin)", detail: "Active conversation noted Apr 6. No follow-up logged.", status: "stale", category: "work", meta: "Since Apr 6", since: "2026-04-06", section: "work" },
+  { id: "benchsci", title: "BenchSci pipeline (Chelsea)", detail: "Active conversation noted Apr 6. No follow-up logged.", status: "stale", category: "work", meta: "Since Apr 6", since: "2026-04-06", section: "work" },
+  { id: "cvc", title: "CVC / Lalit deal outcome", detail: "Call Mar 31, rescheduled to Apr 1 at 12:30 PM. Outcome never logged.", status: "unknown", category: "work", meta: "Call Mar 31", since: "2026-03-31", section: "work" },
+  { id: "hannah-insight", title: "Hannah von Waldersee (Insight Partners)", detail: "Meeting went well Mar 29. No next steps logged.", status: "unknown", category: "work", meta: "Met Mar 29", since: "2026-03-29", section: "work" },
+  { id: "cerity", title: "Cerity Partners (Andrew)", detail: "Financial planning call happened Apr 7. No outcome logged.", status: "unknown", category: "work", meta: "Call Apr 7", since: "2026-04-07", section: "work" },
+  { id: "brooker", title: "Brooker go/no-go decision", detail: "\"Top of mind\" week of Mar 29. Sent new contract Apr 1. Decision not confirmed.", status: "unknown", category: "work", meta: "Since Mar 29", since: "2026-03-29", section: "work" },
+  { id: "thrive", title: "Thrive Market session", detail: "Remote session. Mike leading. Prep call with Nick Green happened Apr 8.", status: "upcoming", category: "work", meta: "Apr 16", since: "2026-04-16", section: "work" },
+
+  // --- FINANCE ---
+  { id: "finance-checkin", title: "Finance check-in", detail: "Full agenda: Maytal house, March revenue, Q2 targets, Silvia dashboard, bills. Scheduled Mar 31 — skipped. Carried to Apr 3. Dropped.", status: "stale", category: "finance", meta: "Scheduled Mar 31", since: "2026-03-31", section: "finance" },
+  { id: "march-revenue", title: "March revenue numbers", detail: "Never received or confirmed.", status: "unknown", category: "finance", meta: "Since Mar 30", since: "2026-03-30", section: "finance" },
+  { id: "march-kpi", title: "March KPI: close 3 deals", detail: "CVC call happened Mar 31. Final count never logged.", status: "unknown", category: "finance", meta: "Target Mar 31", since: "2026-03-31", section: "finance" },
+  { id: "silvia", title: "Silvia dashboard", detail: "Part of finance check-in agenda. Never addressed. Purpose unclear.", status: "unknown", category: "finance", meta: "Since Apr 1", since: "2026-04-01", section: "finance" },
+
+  // --- TRAVEL ---
+  { id: "ltm-dinner", title: "LTM dinner at Baohaus, East Village", detail: "In-person dinner. Transit lookup needed.", status: "upcoming", category: "travel", meta: "Apr 15 · 6:30 PM", since: "2026-04-15", section: "travel" },
+  { id: "nola-flight", title: "Flight to New Orleans from LGA", detail: "Leave home ~5:30 AM. Leo coverage needed Thu-Sun.", status: "upcoming", category: "travel", meta: "Apr 17 · 7:30 AM", since: "2026-04-17", section: "travel" },
+  { id: "nola-la", title: "Flight NOLA → LA", detail: "", status: "upcoming", category: "travel", meta: "Apr 20 · 9:20 PM", since: "2026-04-20", section: "travel" },
+  { id: "leo-coverage", title: "Leo coverage Thu Apr 17 – Sun Apr 20", detail: "Natalia in NOLA/LA, Peter in Miami until Apr 20. Who has Leo?", status: "open", category: "travel", meta: "Needs plan", since: "2026-04-17", section: "travel" },
+  { id: "520-clinton", title: "520 Clinton Ave meeting", detail: "", status: "upcoming", category: "travel", meta: "Apr 21 · 7 PM", since: "2026-04-21", section: "travel" },
+
+  // --- INFRA ---
+  { id: "twitter", title: "Twitter — connect @TalbotQuintero", detail: "Account exists. Integration for posting/reading not set up.", status: "open", category: "infra", meta: "Since Mar 31", since: "2026-03-31", section: "infra" },
+  { id: "jeska-brief", title: "Jeska daily fundraising brief for Peter", detail: "Set up Peter's agent with daily brief on seed-stage fundraising in NYC.", status: "open", category: "infra", meta: "Since Mar 31", since: "2026-03-31", section: "infra" },
+  { id: "browser", title: "Browser access — daily use config", detail: "dev-browser installed. Used for passport portal. Not fully integrated for daily use.", status: "progress", category: "infra", meta: "Partial", since: "2026-04-03", section: "infra" },
+  { id: "jeska-github", title: "Separate GitHub account for Jeska", detail: "Currently shared under hitalbot. Decision deferred.", status: "open", category: "infra", meta: "Deferred", since: "2026-04-13", section: "infra" },
+
+  // --- DONE ---
+  { id: "security-hook", title: "Security hook (check-package-age.sh)", detail: "", status: "done", category: "infra", meta: "Apr 1", since: "2026-04-01", section: "done" },
+  { id: "gh-pages", title: "GitHub Pages dashboard launched", detail: "", status: "done", category: "infra", meta: "Apr 13", since: "2026-04-13", section: "done" },
+  { id: "daily-state", title: "Daily-state.md live ops file", detail: "", status: "done", category: "infra", meta: "Apr 13", since: "2026-04-13", section: "done" },
+  { id: "deal-radar", title: "Deal Radar fix (Jeska/OAuth/dashboard)", detail: "", status: "done", category: "infra", meta: "Apr 13", since: "2026-04-13", section: "done" },
+  { id: "zombie", title: "Zombie morning brief process killed", detail: "", status: "done", category: "infra", meta: "Apr 13", since: "2026-04-13", section: "done" },
+  { id: "timeout", title: "LaunchAgent timeout guards (10 min)", detail: "", status: "done", category: "infra", meta: "Apr 13", since: "2026-04-13", section: "done" },
+  { id: "transit", title: "Transit awareness (dynamic lookup rules)", detail: "", status: "done", category: "infra", meta: "Apr 14", since: "2026-04-14", section: "done" },
+  { id: "lookahead", title: "Week-ahead logistics framework", detail: "", status: "done", category: "infra", meta: "Apr 14", since: "2026-04-14", section: "done" },
+  { id: "solution", title: "Solution-oriented personality rule", detail: "", status: "done", category: "infra", meta: "Apr 14", since: "2026-04-14", section: "done" },
+  { id: "facial", title: "Passport facial capture", detail: "", status: "done", category: "personal", meta: "Apr 14", since: "2026-04-14", section: "done" },
+  { id: "rtm", title: "RTM / Rizvi Traverse kick-off", detail: "", status: "done", category: "work", meta: "Apr 13", since: "2026-04-13", section: "done" },
+  { id: "raptive", title: "Raptive, Pods, Nick at Thrive focus block", detail: "", status: "done", category: "work", meta: "Apr 1", since: "2026-04-01", section: "done" },
+  { id: "planetarium", title: "Planetarium event (Mister Saturday Night)", detail: "", status: "done", category: "personal", meta: "Apr 4", since: "2026-04-04", section: "done" },
+  { id: "task-tracker", title: "Master task tracker audit (82 items)", detail: "", status: "done", category: "infra", meta: "Apr 14", since: "2026-04-14", section: "done" },
+];
+
+// ═══════════════════════════════════
+// SECTIONS — display order
+// ═══════════════════════════════════
+const SECTIONS = [
+  { id: "urgent", emoji: "🔴", label: "Overdue & Urgent" },
+  { id: "personal", emoji: "🟣", label: "Personal" },
+  { id: "work", emoji: "🔵", label: "Work — Pipeline & Deals" },
+  { id: "finance", emoji: "💰", label: "Finance" },
+  { id: "travel", emoji: "🗓️", label: "Travel & Events" },
+  { id: "infra", emoji: "🤖", label: "Agent Infrastructure" },
+  { id: "done", emoji: "✅", label: "Completed" },
+];
+
+const STATUS_OPTIONS = [
+  { value: "overdue", label: "Overdue", tag: "tag-overdue" },
+  { value: "urgent", label: "Urgent", tag: "tag-urgent" },
+  { value: "progress", label: "In Progress", tag: "tag-progress" },
+  { value: "open", label: "Open", tag: "tag-open" },
+  { value: "stale", label: "Stale", tag: "tag-stale" },
+  { value: "upcoming", label: "Upcoming", tag: "tag-upcoming" },
+  { value: "unknown", label: "Unknown", tag: "tag-unknown" },
+  { value: "done", label: "Done", tag: "tag-done" },
+  { value: "dropped", label: "Dropped", tag: "tag-dropped" },
+];
+
+// ═══════════════════════════════════
+// STATE
+// ═══════════════════════════════════
+const STORAGE_KEY = "talbot-tasks-v1";
+let state = {};
+let activeFilter = "all";
+let activeStatFilter = null;
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    state = raw ? JSON.parse(raw) : {};
+  } catch { state = {}; }
+}
+
+function saveState() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+function getTaskState(id) {
+  return state[id] || {};
+}
+
+function setTaskState(id, updates) {
+  state[id] = { ...getTaskState(id), ...updates, updatedAt: new Date().toISOString() };
+  saveState();
+}
+
+function getEffectiveStatus(task) {
+  const ts = getTaskState(task.id);
+  return ts.status || task.status;
+}
+
+function getEffectiveSection(task) {
+  const status = getEffectiveStatus(task);
+  if (status === "done" || status === "dropped") return "done";
+  const ts = getTaskState(task.id);
+  return ts.section || task.section;
+}
+
+// ═══════════════════════════════════
+// RENDERING
+// ═══════════════════════════════════
+function statusTag(status) {
+  const opt = STATUS_OPTIONS.find(o => o.value === status);
+  if (!opt) return "";
+  return `<span class="tag ${opt.tag}">${opt.label.toUpperCase()}</span>`;
+}
+
+function renderTask(task) {
+  const ts = getTaskState(task.id);
+  const status = getEffectiveStatus(task);
+  const isDone = status === "done" || status === "dropped";
+  const note = ts.note || "";
+  const noteOpen = ts.noteOpen || false;
+
+  const card = document.createElement("div");
+  card.className = `card ${isDone ? "completed-card" : ""}`;
+  card.dataset.id = task.id;
+  card.dataset.category = task.category;
+  card.dataset.status = status;
+  card.dataset.section = getEffectiveSection(task);
+
+  let html = `
+    <div class="task-row">
+      <div class="task-check ${isDone ? "checked" : ""}" onclick="toggleDone('${task.id}')" title="${isDone ? "Mark open" : "Mark done"}"></div>
+      <div class="task-body">
+        <div class="task-title ${isDone ? "done-title" : ""}">
+          ${statusTag(status)}
+          ${task.title}
+        </div>
+        ${task.detail ? `<div class="task-detail">${task.detail}</div>` : ""}
+        <div class="task-meta-line">
+          <span>${task.meta}</span>
+          ${ts.updatedAt ? `<span>Updated ${new Date(ts.updatedAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span>` : ""}
+        </div>
+      </div>
+      <div class="task-actions">
+        <select class="status-select" onchange="changeStatus('${task.id}', this.value)" title="Change status">
+          ${STATUS_OPTIONS.map(o => `<option value="${o.value}" ${o.value === status ? "selected" : ""}>${o.label}</option>`).join("")}
+        </select>
+        <button class="act-btn" onclick="toggleNote('${task.id}')" title="Add note">📝</button>
+      </div>
+    </div>`;
+
+  if (note) {
+    html += `<div class="note-display">${escHtml(note)}</div>`;
   }
+
+  html += `
+    <div class="note-area ${noteOpen ? "open" : ""}" id="note-area-${task.id}">
+      <textarea class="note-input" placeholder="Add a note..." onblur="saveNote('${task.id}', this.value)" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();saveNote('${task.id}',this.value);}">${escHtml(note)}</textarea>
+    </div>`;
+
+  card.innerHTML = html;
+  return card;
+}
+
+function escHtml(s) {
+  const d = document.createElement("div");
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+function render() {
+  const container = document.getElementById("task-container");
+  container.innerHTML = "";
+
+  let counts = { urgent: 0, stale: 0, open: 0, done: 0 };
+
+  TASKS.forEach(task => {
+    const status = getEffectiveStatus(task);
+    if (status === "overdue" || status === "urgent") counts.urgent++;
+    else if (status === "stale") counts.stale++;
+    else if (status === "done" || status === "dropped") counts.done++;
+    else counts.open++;
+  });
+
+  document.getElementById("stat-urgent").textContent = counts.urgent;
+  document.getElementById("stat-stale").textContent = counts.stale;
+  document.getElementById("stat-open").textContent = counts.open;
+  document.getElementById("stat-done").textContent = counts.done;
+
+  SECTIONS.forEach(sec => {
+    const tasks = TASKS.filter(t => {
+      const section = getEffectiveSection(t);
+      if (section !== sec.id) return false;
+      if (activeFilter !== "all" && t.category !== activeFilter) return false;
+      if (activeStatFilter) {
+        const status = getEffectiveStatus(t);
+        if (activeStatFilter === "urgent" && status !== "overdue" && status !== "urgent") return false;
+        if (activeStatFilter === "stale" && status !== "stale") return false;
+        if (activeStatFilter === "open" && (status === "overdue" || status === "urgent" || status === "stale" || status === "done" || status === "dropped")) return false;
+        if (activeStatFilter === "done" && status !== "done" && status !== "dropped") return false;
+      }
+      return true;
+    });
+
+    if (tasks.length === 0) return;
+
+    const header = document.createElement("div");
+    header.className = "section-header";
+    header.innerHTML = `${sec.emoji} ${sec.label} <span class="count">${tasks.length}</span>`;
+    container.appendChild(header);
+
+    tasks.forEach(task => {
+      container.appendChild(renderTask(task));
+    });
+  });
+}
+
+// ═══════════════════════════════════
+// ACTIONS
+// ═══════════════════════════════════
+function toggleDone(id) {
+  const task = TASKS.find(t => t.id === id);
+  const status = getEffectiveStatus(task);
+  if (status === "done") {
+    setTaskState(id, { status: task.status, section: task.section });
+    toast("Reopened: " + task.title);
+  } else {
+    setTaskState(id, { status: "done", section: "done" });
+    toast("✓ Done: " + task.title);
+  }
+  render();
+}
+
+function changeStatus(id, newStatus) {
+  const task = TASKS.find(t => t.id === id);
+  if (newStatus === "done" || newStatus === "dropped") {
+    setTaskState(id, { status: newStatus, section: "done" });
+  } else {
+    setTaskState(id, { status: newStatus });
+  }
+  toast(`Status → ${newStatus.charAt(0).toUpperCase() + newStatus.slice(1)}: ${task.title}`);
+  render();
+}
+
+function toggleNote(id) {
+  const ts = getTaskState(id);
+  const isOpen = ts.noteOpen || false;
+  setTaskState(id, { noteOpen: !isOpen });
+  render();
+  if (!isOpen) {
+    setTimeout(() => {
+      const el = document.querySelector(`#note-area-${id} .note-input`);
+      if (el) el.focus();
+    }, 50);
+  }
+}
+
+function saveNote(id, value) {
+  setTaskState(id, { note: value.trim(), noteOpen: false });
+  toast("Note saved");
+  render();
+}
+
+function setFilter(cat) {
+  activeFilter = cat;
+  activeStatFilter = null;
+  document.querySelectorAll(".filter-btn").forEach(b => b.classList.toggle("active", b.dataset.cat === cat));
+  document.querySelectorAll(".stats-row .stat").forEach(s => s.classList.remove("active-filter"));
+  render();
+}
+
+function toggleStatFilter(f) {
+  if (activeStatFilter === f) {
+    activeStatFilter = null;
+    document.querySelectorAll(".stats-row .stat").forEach(s => s.classList.remove("active-filter"));
+  } else {
+    activeStatFilter = f;
+    document.querySelectorAll(".stats-row .stat").forEach(s => s.classList.toggle("active-filter", s.dataset.filter === f));
+  }
+  activeFilter = "all";
+  document.querySelectorAll(".filter-btn").forEach(b => b.classList.toggle("active", b.dataset.cat === "all"));
+  render();
+}
+
+function resetAll() {
+  if (confirm("Reset all local changes? This reverts every status change and note you made in the browser.")) {
+    localStorage.removeItem(STORAGE_KEY);
+    state = {};
+    toast("All local changes reset");
+    render();
+  }
+}
+
+function toast(msg) {
+  const el = document.getElementById("toast");
+  el.textContent = msg;
+  el.classList.add("show");
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.classList.remove("show"), 2200);
+}
+
+function toggleSidebar() {
+  document.getElementById("sidebar").classList.toggle("open");
+  document.getElementById("overlay").classList.toggle("active");
+}
+
+// ═══════════════════════════════════
+// INIT
+// ═══════════════════════════════════
+loadState();
+document.getElementById("updated").textContent = "Last updated: " + new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" });
+render();
 </script>
 </body>
 </html>
