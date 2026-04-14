@@ -204,6 +204,13 @@
   }
   .reset-btn:hover { border-color: var(--red); color: var(--red); }
 
+  .sync-badge {
+    font-family: 'Inter', system-ui, sans-serif; font-size: 0.65em; font-weight: 600;
+    padding: 3px 10px; border-radius: 12px; letter-spacing: 0.02em;
+  }
+  .sync-badge.synced { background: rgba(90,122,58,0.12); color: var(--green); }
+  .sync-badge.local { background: rgba(166,124,55,0.12); color: var(--yellow); }
+
   .hidden { display: none !important; }
 
   @media (max-width: 768px) {
@@ -260,7 +267,10 @@
   </aside>
 
   <main class="main">
-    <div class="page-title">Task Tracker</div>
+    <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;">
+      <div class="page-title">Task Tracker</div>
+      <span class="sync-badge local" id="sync-badge">Checking...</span>
+    </div>
     <div class="page-date" id="updated"></div>
 
     <div class="stats-row" id="stats-row">
@@ -403,14 +413,34 @@ const STATUS_OPTIONS = [
 ];
 
 // ═══════════════════════════════════
-// STATE
+// STATE — server-first, localStorage fallback
 // ═══════════════════════════════════
+const API_BASE = "http://localhost:7777";
 const STORAGE_KEY = "talbot-tasks-v1";
 let state = {};
 let activeFilter = "all";
 let activeStatFilter = null;
+let serverAvailable = false;
 
-function loadState() {
+async function checkServer() {
+  try {
+    const r = await fetch(API_BASE + "/api/health", { signal: AbortSignal.timeout(800) });
+    serverAvailable = r.ok;
+  } catch { serverAvailable = false; }
+  document.getElementById("sync-badge").textContent = serverAvailable ? "Synced" : "Local only";
+  document.getElementById("sync-badge").className = "sync-badge " + (serverAvailable ? "synced" : "local");
+}
+
+async function loadState() {
+  await checkServer();
+  if (serverAvailable) {
+    try {
+      const r = await fetch(API_BASE + "/api/tasks");
+      state = await r.json();
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      return;
+    } catch {}
+  }
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     state = raw ? JSON.parse(raw) : {};
@@ -421,13 +451,26 @@ function saveState() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 }
 
+async function syncToServer(taskId, taskState) {
+  if (!serverAvailable) return;
+  try {
+    await fetch(API_BASE + "/api/tasks", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: taskId, ...taskState }),
+    });
+  } catch { /* server went away mid-session, localStorage still has it */ }
+}
+
 function getTaskState(id) {
   return state[id] || {};
 }
 
 function setTaskState(id, updates) {
-  state[id] = { ...getTaskState(id), ...updates, updatedAt: new Date().toISOString() };
+  const merged = { ...getTaskState(id), ...updates, updatedAt: new Date().toISOString() };
+  state[id] = merged;
   saveState();
+  syncToServer(id, merged);
 }
 
 function getEffectiveStatus(task) {
@@ -645,9 +688,13 @@ function toggleSidebar() {
 // ═══════════════════════════════════
 // INIT
 // ═══════════════════════════════════
-loadState();
-document.getElementById("updated").textContent = "Last updated: " + new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" });
-render();
+(async () => {
+  await loadState();
+  document.getElementById("updated").textContent = "Last updated: " + new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" });
+  render();
+  // Re-check server periodically
+  setInterval(checkServer, 30000);
+})();
 </script>
 </body>
 </html>
