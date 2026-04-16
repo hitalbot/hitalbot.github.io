@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NOLA Weekend — Apr 16-19, 2026</title>
+<style>
+  :root {
+    --gold: #C8A951;
+    --teal: #2A9D8F;
+    --coral: #E76F51;
+    --navy: #264653;
+    --cream: #FAFAF5;
+    --sand: #F4F1EB;
+    --muted: #6B7280;
+    --green: #059669;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--cream);
+    color: #1F2937;
+    line-height: 1.6;
+    padding-bottom: 60px;
+  }
+  .hero {
+    background: linear-gradient(135deg, var(--navy) 0%, #1B3A4B 60%, var(--teal) 100%);
+    color: white;
+    padding: 40px 20px 30px;
+    text-align: center;
+  }
+  .hero h1 { font-size: 28px; font-weight: 700; letter-spacing: 1px; }
+  .hero .subtitle { font-size: 15px; opacity: 0.85; margin-top: 6px; }
+  .hero .fqf-badge {
+    display: inline-block;
+    background: var(--gold);
+    color: var(--navy);
+    font-weight: 700;
+    font-size: 12px;
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-top: 12px;
+    letter-spacing: 0.5px;
+  }
+  .nav {
+    display: flex;
+    gap: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: white;
+    border-bottom: 1px solid #E5E7EB;
+    overflow-x: auto;
+  }
+  .nav a {
+    flex: 1;
+    text-align: center;
+    padding: 12px 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+    text-decoration: none;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+    min-width: 80px;
+  }
+  .nav a.active, .nav a:hover { color: var(--teal); border-bottom-color: var(--teal); }
+  .day-section { padding: 20px 16px; max-width: 700px; margin: 0 auto; }
+  .day-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--navy);
+  }
+  .day-emoji { font-size: 32px; }
+  .day-header h2 { font-size: 20px; font-weight: 700; color: var(--navy); }
+  .day-header .day-theme { font-size: 13px; color: var(--muted); font-weight: 400; }
+  .time-block {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 16px;
+    padding: 14px;
+    background: white;
+    border-radius: 12px;
+    border-left: 4px solid var(--teal);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .time-block.work { border-left-color: var(--coral); }
+  .time-block.food { border-left-color: var(--gold); }
+  .time-block.nature { border-left-color: var(--green); }
+  .time-block.music { border-left-color: #8B5CF6; }
+  .time-block.alert { border-left-color: #EF4444; background: #FEF2F2; }
+  .time-col {
+    min-width: 65px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--teal);
+    padding-top: 2px;
+  }
+  .time-block.work .time-col { color: var(--coral); }
+  .time-block.food .time-col { color: var(--gold); }
+  .time-block.nature .time-col { color: var(--green); }
+  .time-block.music .time-col { color: #8B5CF6; }
+  .time-block.alert .time-col { color: #EF4444; }
+  .content-col { flex: 1; }
+  .content-col h3 { font-size: 15px; font-weight: 700; margin-bottom: 3px; }
+  .content-col p { font-size: 13px; color: #4B5563; }
+  .content-col .tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-top: 6px;
+    margin-right: 4px;
+  }
+  .tag-fqf { background: #FEF3C7; color: #92400E; }
+  .tag-river { background: #DBEAFE; color: #1E40AF; }
+  .tag-streetcar { background: #D1FAE5; color: #065F46; }
+  .tag-nature { background: #D1FAE5; color: #065F46; }
+  .tag-food { background: #FDE8E8; color: #9B1C1C; }
+  .tag-music { background: #EDE9FE; color: #5B21B6; }
+  .tag-work { background: #FEE2E2; color: #991B1B; }
+
+  .info-card {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .info-card h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .info-card ul { list-style: none; padding: 0; }
+  .info-card li {
+    font-size: 13px;
+    color: #4B5563;
+    padding: 4px 0;
+    border-bottom: 1px solid #F3F4F6;
+  }
+  .info-card li:last-child { border-bottom: none; }
+  .info-card li strong { color: #1F2937; }
+
+  .section-divider {
+    text-align: center;
+    padding: 30px 0 10px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .flower-alert {
+    background: linear-gradient(135deg, #FEF3C7, #FDE68A);
+    border: 2px solid var(--gold);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+  .flower-alert h3 { font-size: 15px; font-weight: 700; color: #92400E; }
+  .flower-alert p { font-size: 13px; color: #78350F; margin-top: 4px; }
+
+  .flight-card {
+    background: linear-gradient(135deg, var(--navy), #1B3A4B);
+    color: white;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+  .flight-card h3 { color: white; font-size: 15px; margin-bottom: 8px; }
+  .flight-card p { font-size: 13px; opacity: 0.9; }
+  .flight-card .flight-time { font-size: 24px; font-weight: 700; color: var(--gold); }
+
+  @media (max-width: 480px) {
+    .hero h1 { font-size: 22px; }
+    .time-block { padding: 12px; }
+    .time-col { min-width: 55px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>🎺 NOLA WEEKEND</h1>
+  <div class="subtitle">April 16–19, 2026 · Catahoula Hotel · New Orleans</div>
+  <div class="fqf-badge">🎶 FRENCH QUARTER FEST — ALL 4 DAYS</div>
+</div>
+
+<nav class="nav">
+  <a href="#thu" class="active">THU 16</a>
+  <a href="#fri">FRI 17</a>
+  <a href="#sat">SAT 18</a>
+  <a href="#sun">SUN 19</a>
+  <a href="#essentials">ESSENTIALS</a>
+</nav>
+
+<!-- ━━━━━━━━━━━━━ THURSDAY ━━━━━━━━━━━━━ -->
+<div id="thu" class="day-section">
+  <div class="day-header">
+    <div class="day-emoji">🎺</div>
+    <div>
+      <h2>Thursday, April 16</h2>
+      <div class="day-theme">FQF Opening Day · Birthday Lunch · Cochon Dinner</div>
+    </div>
+  </div>
+
+  <div class="flower-alert">
+    <h3>💐 Pick Up Flowers Before 5 PM</h3>
+    <p><strong>Le Fleuriste Nola</strong> — 739 Iberville St (8 min walk) · Open til 5 PM · (504) 777-0585</p>
+    <p><strong>Flora Savage</strong> — 1301 Royal St (12 min walk) · Open til 5 PM · (504) 581-4728</p>
+    <p><strong>Harkins the Florist</strong> — 1601 Magazine St (15 min walk) · Open til 5:30 PM · (504) 529-1638 — most reliable walk-in</p>
+  </div>
+
+  <div class="time-block">
+    <div class="time-col">2:00 PM</div>
+    <div class="content-col">
+      <h3>🎶 French Quarter Fest — Opening Day</h3>
+      <p>Walk through the Quarter and hit the stages! FQF runs 11 AM–8 PM, 20 stages, 302 performances, 100% FREE. Start at <strong>Woldenberg Riverfront Park</strong> — stages right along the Mississippi River (cross off both FQF + river views). Walk toward Jackson Square for more stages and street energy.</p>
+      <p>New for 2026: expanded riverfront stage at Governor Nicholls Wharf.</p>
+      <span class="tag tag-fqf">FQF</span><span class="tag tag-river">RIVER VIEWS</span>
+    </div>
+  </div>
+
+  <div class="time-block">
+    <div class="time-col">3:30 PM</div>
+    <div class="content-col">
+      <h3>🚶‍♀️ Moon Walk + Mississippi River</h3>
+      <p>Walk the Moon Walk promenade behind Jackson Square along the Mississippi. Watch tugs, barges, and freighters navigate the bend that gives NOLA the name "Crescent City." Great river views + FQF music drifting over. ~20 min stroll.</p>
+      <span class="tag tag-river">MISSISSIPPI RIVER</span>
+    </div>
+  </div>
+
+  <div class="time-block food">
+    <div class="time-col">4:15 PM</div>
+    <div class="content-col">
+      <h3>💐 Pick Up Flowers</h3>
+      <p>Grab flowers on the walk back toward the hotel. Le Fleuriste on Iberville is on the route.</p>
+    </div>
+  </div>
+
+  <div class="time-block work">
+    <div class="time-col">4:00 PM</div>
+    <div class="content-col">
+      <h3>⚠️ Chaberton Call — Katherine Griffin</h3>
+      <p>4–4:30 PM CT on your Every calendar. Executive search firm exploring Claude for internal workflows. You're marked "NQ offline" but this is a client prospect call. <strong>Do you need to take this, or is the team covering?</strong></p>
+      <span class="tag tag-work">WORK</span>
+    </div>
+  </div>
+
+  <div class="time-block food">
+    <div class="time-col">5:00 PM</div>
+    <div class="content-col">
+      <h3>🍽 Dinner at Cochon</h3>
+      <p>930 Tchoupitoulas St · Reservation confirmed 5 PM CT. Cajun/Southern, Michelin Bib Gourmand. Don't miss: cochon de lait, fried alligator, house-made boudin.</p>
+      <span class="tag tag-food">DINNER</span>
+    </div>
+  </div>
+
+  <div class="time-block music">
+    <div class="time-col">7:30 PM</div>
+    <div class="content-col">
+      <h3>🎵 Post-Dinner Options</h3>
+      <p><strong>Option A:</strong> Walk back through FQF (closes 8 PM) — catch the last sets<br>
+      <strong>Option B:</strong> Head to <strong>Frenchmen Street</strong> for live music (10 min Uber). The Spotted Cat, Blue Nile, d.b.a. — music starts ~8-9 PM, many clubs no cover<br>
+      <strong>Option C:</strong> <strong>Preservation Hall</strong> — intimate traditional jazz, $20-25, arrive 30 min early for seats</p>
+      <span class="tag tag-music">LIVE MUSIC</span>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━━━━━━━━━━━ FRIDAY ━━━━━━━━━━━━━ -->
+<div id="fri" class="day-section">
+  <div class="day-header">
+    <div class="day-emoji">🚃</div>
+    <div>
+      <h2>Friday, April 17</h2>
+      <div class="day-theme">Work Morning · Streetcar + Garden District · FQF Day 2</div>
+    </div>
+  </div>
+
+  <div class="time-block work">
+    <div class="time-col">8:00 AM</div>
+    <div class="content-col">
+      <h3>💻 Work Block — Calls from Hotel</h3>
+      <p>
+        8:00–8:30 AM · Nityesh Sync<br>
+        8:00–9:00 AM · TowerBrook AI Training (Brooker delivering)<br>
+        10:00–11:00 AM · Every Show & Tell<br>
+        11:30 AM–12:30 PM · Pam (Seven Mile Advisory) / Peter / Natalia<br>
+        12:30–1:00 PM · Sarah (Woodline Partners LP) / Natalia
+      </p>
+      <span class="tag tag-work">VIRTUAL — FROM HOTEL</span>
+    </div>
+  </div>
+
+  <div class="time-block">
+    <div class="time-col">1:00 PM</div>
+    <div class="content-col">
+      <h3>🚃 St. Charles Streetcar → Garden District</h3>
+      <p>Board at <strong>Carondelet & Canal St</strong> (10 min walk from hotel). Ride the oldest continuously operating streetcar in the world (est. 1835) through a tunnel of live oaks past antebellum mansions. ~30 min to Washington Ave.</p>
+      <p><strong>Cost:</strong> $1.25/ride or get a $9 three-day Jazzy Pass (unlimited streetcar + bus). Download RTA GoMobile app.</p>
+      <span class="tag tag-streetcar">STREETCAR RIDE</span>
+    </div>
+  </div>
+
+  <div class="time-block nature">
+    <div class="time-col">1:45 PM</div>
+    <div class="content-col">
+      <h3>🏛 Garden District Walk</h3>
+      <p>Get off at Washington Ave. Walk the neighborhood — stunning antebellum mansions, wrought iron, gardens. See <strong>Lafayette Cemetery No. 1</strong> (free, atmospheric). Walk down <strong>Magazine Street</strong> for boutiques, vintage shops, galleries. Commander's Palace is right there too.</p>
+      <p>Self-guided is great; ~1.5 hours of wandering.</p>
+      <span class="tag tag-nature">WALKING TOUR</span>
+    </div>
+  </div>
+
+  <div class="time-block">
+    <div class="time-col">3:30 PM</div>
+    <div class="content-col">
+      <h3>🎶 FQF Day 2 — Afternoon Sets</h3>
+      <p>Take the streetcar back to Canal St and walk into the Quarter for FQF. Look for: <strong>Rebirth Brass Band</strong>, <strong>Kermit Ruffins</strong>, <strong>The Soul Rebels</strong>. Check the FQF app for the set schedule.</p>
+      <span class="tag tag-fqf">FQF</span><span class="tag tag-music">LIVE MUSIC</span>
+    </div>
+  </div>
+
+  <div class="time-block work">
+    <div class="time-col">4:00 PM</div>
+    <div class="content-col">
+      <h3>📋 NQ Appt</h3>
+      <p>4–5 PM CT on your calendar. Plan to be back at hotel or somewhere quiet by 3:45 PM.</p>
+      <span class="tag tag-work">APPOINTMENT</span>
+    </div>
+  </div>
+
+  <div class="time-block music">
+    <div class="time-col">7:00 PM</div>
+    <div class="content-col">
+      <h3>🎵 Evening: Frenchmen Street</h3>
+      <p>Friday night on Frenchmen is peak NOLA music. Wander the strip, duck into clubs. <strong>The Spotted Cat</strong> for scorching jazz. <strong>d.b.a.</strong> for funk/brass. No cover at most clubs — just walk in. Grab dinner at <strong>Three Muses</strong> (small plates + live music) if hungry.</p>
+      <span class="tag tag-music">LIVE MUSIC</span>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━━━━━━━━━━━ SATURDAY ━━━━━━━━━━━━━ -->
+<div id="sat" class="day-section">
+  <div class="day-header">
+    <div class="day-emoji">🐊</div>
+    <div>
+      <h2>Saturday, April 18</h2>
+      <div class="day-theme">Full Adventure Day — Nature + FQF + Music</div>
+    </div>
+  </div>
+
+  <div class="info-card">
+    <h3>🌿 Choose Your Morning Adventure</h3>
+    <ul>
+      <li><strong>Option A: Swamp Tour</strong> — 9:30 AM departure, back by 1 PM. See alligators, cypress swamps, Spanish moss. ~25 min drive from hotel. $35-60/person. April is prime season. Book: Cajun Pride (cajunprideswamptours.com) or Cajun Encounters.</li>
+      <li><strong>Option B: City Park + Bayou St. John</strong> — Take the Canal St streetcar to City Park. Visit the Besthoff Sculpture Garden (FREE, 90+ sculptures in 11 acres). Then kayak Bayou St. John — Kayak-iti-Yat runs guided tours past historic homes.</li>
+      <li><strong>Option C: Steamboat Natchez</strong> — Board at Toulouse St Wharf, 11 AM boarding, 11:30 AM departure. Jazz cruise on the Mississippi. $43.50/adult or $65 with Creole lunch. ~2 hours. Live jazz band on board.</li>
+    </ul>
+  </div>
+
+  <div class="time-block nature">
+    <div class="time-col">9:00 AM</div>
+    <div class="content-col">
+      <h3>🐊 Swamp Tour (Recommended)</h3>
+      <p><strong>Cajun Pride Swamp Tours</strong> — 9:30 AM departure from LaPlace (~25 min Uber). 1.5-2 hour pontoon boat through bayou. Alligators, herons, turtles, cypress trees. You can combine with <strong>Jean Lafitte Barataria Preserve</strong> (free boardwalk trails through swamp) on the way back.</p>
+      <p>Back by ~12:30 PM for FQF afternoon.</p>
+      <span class="tag tag-nature">NATURE</span>
+    </div>
+  </div>
+
+  <div class="time-block food">
+    <div class="time-col">1:00 PM</div>
+    <div class="content-col">
+      <h3>☕ Café du Monde</h3>
+      <p>French Market, 800 Decatur St. Beignets + chicory coffee — the iconic NOLA experience. Open 24 hrs. Expect a line during FQF weekend — worth it. Powdered sugar will get everywhere. That's the point.</p>
+      <span class="tag tag-food">ICONIC</span>
+    </div>
+  </div>
+
+  <div class="time-block">
+    <div class="time-col">2:00 PM</div>
+    <div class="content-col">
+      <h3>🎶 FQF Day 3 — Big Acts</h3>
+      <p>Saturday is typically the biggest day. Look for: <strong>PJ Morton</strong> (Grammy-winning NOLA native), <strong>Big Freedia</strong> (bounce royalty), <strong>Irma Thomas</strong> (Soul Queen of NOLA), <strong>Dirty Dozen Brass Band</strong>. Walk the 20 stages, eat from the food vendors.</p>
+      <p>Also explore: <strong>Royal Street</strong> (pedestrian-only, galleries + antiques + street musicians) and <strong>Jackson Square</strong> (artists, performers, St. Louis Cathedral).</p>
+      <span class="tag tag-fqf">FQF</span>
+    </div>
+  </div>
+
+  <div class="time-block">
+    <div class="time-col">4:00 PM</div>
+    <div class="content-col">
+      <h3>🚢 Steamboat Natchez (Alternative)</h3>
+      <p>If you skip the morning swamp tour, the afternoon cruise boards at 2 PM, departs 2:30 PM. Or do BOTH — swamp in the morning, steamboat in the afternoon. Toulouse St Wharf, right by the Quarter.</p>
+      <span class="tag tag-river">MISSISSIPPI RIVER</span>
+    </div>
+  </div>
+
+  <div class="time-block music">
+    <div class="time-col">8:00 PM</div>
+    <div class="content-col">
+      <h3>🎷 Preservation Hall</h3>
+      <p>726 St. Peter St, French Quarter. Intimate, no-frills room for traditional New Orleans jazz since 1961. $20-25. No drinks, no food — just the music. Arrive 30-45 min early for a seat. 3 shows nightly during FQF weekend. This is the real thing.</p>
+      <span class="tag tag-music">MUST-DO</span>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━━━━━━━━━━━ SUNDAY ━━━━━━━━━━━━━ -->
+<div id="sun" class="day-section">
+  <div class="day-header">
+    <div class="day-emoji">✈️</div>
+    <div>
+      <h2>Sunday, April 19</h2>
+      <div class="day-theme">Final Day — FQF Finale · Departure Evening</div>
+    </div>
+  </div>
+
+  <div class="flight-card">
+    <h3>✈️ Flights Tonight from MSY</h3>
+    <p><strong>DL 1387</strong> → JFK · Departs <span class="flight-time">7:55 PM CT</span></p>
+    <p><strong>MX 352</strong> → Los Angeles · Departs <span class="flight-time">8:20 PM CT</span></p>
+    <p style="margin-top:8px; font-size:12px; opacity:0.8;">⚠️ Two flights on calendar — confirm which one you're taking. Need to leave hotel by ~5:30-6:00 PM CT for MSY (30 min Uber + security).</p>
+  </div>
+
+  <div class="time-block food">
+    <div class="time-col">9:00 AM</div>
+    <div class="content-col">
+      <h3>☕ Morning in the Quarter</h3>
+      <p>Café du Monde for beignets (if you didn't go yesterday). Walk <strong>Jackson Square</strong> — street artists, tarot readers, St. Louis Cathedral. Browse <strong>Royal Street</strong> galleries and antique shops (pedestrian-only during the day).</p>
+      <span class="tag tag-food">BREAKFAST</span>
+    </div>
+  </div>
+
+  <div class="time-block nature">
+    <div class="time-col">10:30 AM</div>
+    <div class="content-col">
+      <h3>🌳 Crescent Park — River + Nature</h3>
+      <p>1.4-mile linear park in the Bywater along the Mississippi River. Enter via the "Rusty Rainbow" pedestrian bridge — great views. Elevated walkways with river views, green space, public art. Free, open to the public. 15 min Uber from hotel.</p>
+      <p>Walk Frenchmen Street on the way back (daytime browsing, different vibe from nighttime).</p>
+      <span class="tag tag-nature">NATURE</span><span class="tag tag-river">RIVER VIEWS</span>
+    </div>
+  </div>
+
+  <div class="time-block">
+    <div class="time-col">12:00 PM</div>
+    <div class="content-col">
+      <h3>🎶 FQF Final Day — Last Sets</h3>
+      <p>Sunday is the farewell. Soak it in — final walk through the stages, last bites from the food vendors, one more brass band. The energy on closing day is special.</p>
+      <span class="tag tag-fqf">FQF FINALE</span>
+    </div>
+  </div>
+
+  <div class="time-block food">
+    <div class="time-col">1:30 PM</div>
+    <div class="content-col">
+      <h3>🍽 Lunch</h3>
+      <p>Last NOLA meal! Options near the Quarter:<br>
+      <strong>Commander's Palace</strong> — Sunday jazz brunch, legendary (book ahead)<br>
+      <strong>Seaworthy</strong> — Oysters + seafood, 8 min walk from hotel<br>
+      <strong>FQF food vendors</strong> — Crawfish Monica, cochon de lait po-boy, shrimp & grits from festival booths</p>
+      <span class="tag tag-food">LUNCH</span>
+    </div>
+  </div>
+
+  <div class="time-block">
+    <div class="time-col">3:00 PM</div>
+    <div class="content-col">
+      <h3>🛍 Magazine Street Shopping</h3>
+      <p>6-mile stretch of boutiques, vintage shops, galleries. Take an Uber to the Lower Garden District stretch and browse north. Great for gifts and keepsakes. Head back to hotel by 5 PM to pack.</p>
+    </div>
+  </div>
+
+  <div class="time-block alert">
+    <div class="time-col">5:30 PM</div>
+    <div class="content-col">
+      <h3>🚗 Leave for MSY Airport</h3>
+      <p>30 min Uber to Louis Armstrong International. Allow extra time — FQF weekend traffic in the Quarter can add 10-15 min. TSA PreCheck recommended.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━━━━━━━━━━━ ESSENTIALS ━━━━━━━━━━━━━ -->
+<div id="essentials" class="day-section">
+  <div class="day-header">
+    <div class="day-emoji">📋</div>
+    <div>
+      <h2>Essentials & Tips</h2>
+      <div class="day-theme">Everything you need to know</div>
+    </div>
+  </div>
+
+  <div class="info-card">
+    <h3>🎶 French Quarter Festival 2026</h3>
+    <ul>
+      <li><strong>Dates:</strong> April 16–19 (Thu–Sun) — you're here for ALL of it</li>
+      <li><strong>Hours:</strong> 11 AM – 8 PM daily</li>
+      <li><strong>Cost:</strong> 100% FREE</li>
+      <li><strong>Scale:</strong> 302 performances across 20 stages</li>
+      <li><strong>Location:</strong> Throughout the French Quarter — Jackson Square, Woldenberg Riverfront Park, Bourbon St, Royal St, the Mint, new Governor Nicholls Wharf expansion</li>
+      <li><strong>Must-see acts:</strong> PJ Morton, Irma Thomas, Big Freedia, Rebirth Brass Band, Dirty Dozen, The Soul Rebels, Kermit Ruffins, Preservation Brass, Dawn Richard</li>
+      <li><strong>Tip:</strong> Download the official FQF app for real-time schedules</li>
+    </ul>
+  </div>
+
+  <div class="info-card">
+    <h3>🚃 Getting Around</h3>
+    <ul>
+      <li><strong>Streetcar:</strong> $1.25/ride or <strong>$9 three-day Jazzy Pass</strong> (unlimited). Get the GoMobile app.</li>
+      <li><strong>St. Charles Line:</strong> Canal St → Garden District → Uptown → Audubon Park. ~45 min end-to-end. Runs 24 hrs.</li>
+      <li><strong>Canal Street Line:</strong> Downtown → City Park / NOMA. Great for the Sculpture Garden.</li>
+      <li><strong>Riverfront Line:</strong> Short scenic ride along the Mississippi.</li>
+      <li><strong>Uber:</strong> Expect surge pricing during FQF. Streetcar + walking is often faster in the Quarter.</li>
+    </ul>
+  </div>
+
+  <div class="info-card">
+    <h3>🌊 Mississippi River Experiences</h3>
+    <ul>
+      <li><strong>Steamboat Natchez:</strong> Boards 11 AM & 2 PM daily at Toulouse St Wharf. Jazz cruise $43.50, with lunch $65. ~2 hrs.</li>
+      <li><strong>Moon Walk:</strong> Free riverfront promenade behind Jackson Square. Great sunset spot.</li>
+      <li><strong>Woldenberg Park:</strong> Riverfront park near Aquarium — also an FQF stage area.</li>
+      <li><strong>Crescent Park:</strong> 1.4-mile elevated riverfront park in Bywater. "Rusty Rainbow" bridge entrance. Free.</li>
+    </ul>
+  </div>
+
+  <div class="info-card">
+    <h3>🌿 Nature & Outdoors</h3>
+    <ul>
+      <li><strong>Swamp Tour:</strong> Cajun Pride, 9:30 AM/12 PM/2:15 PM departures. ~25 min from hotel. $35-60. Book ahead for weekend.</li>
+      <li><strong>City Park:</strong> Besthoff Sculpture Garden (FREE, 90+ sculptures). Botanical Garden. Big Lake kayaks/pedal boats.</li>
+      <li><strong>Bayou St. John:</strong> Kayak tours through Mid-City. Kayak-iti-Yat runs guided tours.</li>
+      <li><strong>Jean Lafitte Barataria Preserve:</strong> Free boardwalk trails through swamp. Near swamp tour launches.</li>
+      <li><strong>Audubon Park:</strong> Via St. Charles streetcar. Live oak alleys, lagoons, zoo adjacent.</li>
+    </ul>
+  </div>
+
+  <div class="info-card">
+    <h3>🎷 Can't-Miss NOLA</h3>
+    <ul>
+      <li>☑️ <strong>Café du Monde</strong> — Beignets + chicory coffee, 24 hrs</li>
+      <li>☑️ <strong>French Quarter Fest</strong> — All 4 days!</li>
+      <li>☑️ <strong>St. Charles Streetcar</strong> — Oldest in the world</li>
+      <li>☑️ <strong>Frenchmen Street</strong> — Real music scene (locals' Bourbon St)</li>
+      <li>☑️ <strong>Preservation Hall</strong> — Intimate trad jazz, $20-25</li>
+      <li>☑️ <strong>Garden District Walk</strong> — Mansions, Lafayette Cemetery, Magazine St</li>
+      <li>☑️ <strong>Mississippi River</strong> — Moon Walk, Steamboat Natchez, Crescent Park</li>
+      <li>☑️ <strong>Jackson Square</strong> — St. Louis Cathedral, street artists</li>
+      <li>☑️ <strong>Royal Street</strong> — Galleries, antiques, pedestrian-only daytime</li>
+      <li>☑️ <strong>Cochon</strong> — ✅ Thursday dinner, locked in</li>
+    </ul>
+  </div>
+
+  <div class="info-card">
+    <h3>📍 Key Locations from Catahoula Hotel</h3>
+    <ul>
+      <li><strong>French Quarter:</strong> 5-10 min walk</li>
+      <li><strong>Cochon:</strong> 15 min walk (930 Tchoupitoulas)</li>
+      <li><strong>Jackson Square:</strong> 12 min walk</li>
+      <li><strong>Frenchmen Street:</strong> 10 min Uber / 25 min walk</li>
+      <li><strong>Garden District:</strong> 10 min streetcar from Canal St</li>
+      <li><strong>City Park:</strong> 20 min streetcar (Canal line)</li>
+      <li><strong>MSY Airport:</strong> 30 min Uber</li>
+    </ul>
+  </div>
+</div>
+
+<div style="text-align:center; padding:30px 20px; font-size:11px; color:var(--muted);">
+  Built by Talbot · Updated April 16, 2026
+</div>
+
+<script>
+  // Smooth scroll for nav
+  document.querySelectorAll('.nav a').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      document.querySelectorAll('.nav a').forEach(x => x.classList.remove('active'));
+      a.classList.add('active');
+      document.querySelector(a.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+  // Update active on scroll
+  const sections = ['thu','fri','sat','sun','essentials'];
+  window.addEventListener('scroll', () => {
+    let current = sections[0];
+    for (const id of sections) {
+      const el = document.getElementById(id);
+      if (el && el.getBoundingClientRect().top <= 80) current = id;
+    }
+    document.querySelectorAll('.nav a').forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+    });
+  });
+</script>
+
+</body>
+</html>
