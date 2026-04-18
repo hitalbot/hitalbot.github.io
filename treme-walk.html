@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tremé Walking Tour — NOLA</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  :root {
+    --navy: #264653;
+    --teal: #2A9D8F;
+    --gold: #C8A951;
+    --terracotta: #C0623A;
+    --cream: #FAFAF5;
+    --sand: #F4F1EB;
+    --deep: #4A1A2C;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--cream);
+    color: #1F2937;
+  }
+  .header {
+    background: linear-gradient(135deg, var(--deep) 0%, #2D1B30 50%, var(--terracotta) 100%);
+    color: white;
+    padding: 28px 20px 20px;
+    text-align: center;
+  }
+  .header h1 { font-size: 22px; font-weight: 700; letter-spacing: 1px; }
+  .header p { font-size: 13px; opacity: 0.8; margin-top: 4px; }
+  #map { width: 100%; height: 45vh; min-height: 300px; }
+  .stops { padding: 0 16px 80px; }
+  .stop {
+    background: white;
+    border-radius: 12px;
+    padding: 18px;
+    margin-top: 14px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    border-left: 4px solid var(--terracotta);
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+  .stop:active { transform: scale(0.98); }
+  .stop.arch { border-left-color: var(--teal); }
+  .stop.music { border-left-color: var(--gold); }
+  .stop.museum { border-left-color: var(--deep); }
+  .stop-num {
+    display: inline-block;
+    background: var(--deep);
+    color: white;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 26px;
+    font-size: 13px;
+    font-weight: 700;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+  .stop h3 {
+    display: inline;
+    font-size: 16px;
+    font-weight: 700;
+    vertical-align: middle;
+  }
+  .stop-addr {
+    font-size: 12px;
+    color: #6B7280;
+    margin: 4px 0 8px 34px;
+  }
+  .stop-body {
+    font-size: 14px;
+    line-height: 1.65;
+    color: #374151;
+    margin-left: 34px;
+  }
+  .stop-body strong { color: var(--deep); }
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+  .tag-hist { background: #DBEAFE; color: #1E40AF; }
+  .tag-arch { background: #D1FAE5; color: #065F46; }
+  .tag-music { background: #FEF3C7; color: #92400E; }
+  .tag-art { background: #EDE9FE; color: #5B21B6; }
+  .tag-sacred { background: #FEE2E2; color: #991B1B; }
+  .walk-info {
+    background: var(--sand);
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin-top: 14px;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+  .walk-info h4 { font-size: 14px; margin-bottom: 6px; color: var(--deep); }
+  .directions-btn {
+    display: block;
+    background: var(--terracotta);
+    color: white;
+    text-align: center;
+    padding: 14px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    margin-top: 16px;
+  }
+  .section-label {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--terracotta);
+    margin: 24px 0 4px;
+  }
+  .leaflet-popup-content-wrapper {
+    border-radius: 10px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  }
+  .leaflet-popup-content { font-size: 13px; line-height: 1.5; margin: 10px 14px; }
+  .leaflet-popup-content b { color: var(--deep); }
+  .popup-num {
+    display: inline-block;
+    background: var(--deep);
+    color: white;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    margin-right: 4px;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🏘 Tremé Walking Tour</h1>
+  <p>The oldest Black neighborhood in America</p>
+  <p>~1 mi sequential route · 60-90 min with museum stops</p>
+</div>
+
+<div id="map"></div>
+
+<div class="stops">
+
+  <div class="walk-info">
+    <h4>About Tremé</h4>
+    Established in the 1810s on land purchased from Claude Tremé, this became <strong>the first designated neighborhood for free people of color in America</strong>. Before the Civil War, this was home to a thriving community of free Black Creoles — artisans, musicians, merchants, property owners — who built a culture that would eventually give birth to jazz, second line parades, and Mardi Gras Indian traditions. The architecture here is radically different from the Garden District: Creole cottages set flush to the sidewalk, shotgun houses with West African roots, modest churches that anchored a revolution. This is where American music was born.
+  </div>
+
+  <a href="https://www.google.com/maps/dir/Louis+Armstrong+Park,+New+Orleans,+LA/St+Augustine+Catholic+Church,+1210+Governor+Nicholls+St,+New+Orleans,+LA/1418+Governor+Nicholls+St,+New+Orleans,+LA/1531+St+Philip+St,+New+Orleans,+LA/St+Claude+Ave+and+Esplanade+Ave,+New+Orleans,+LA/2336+Esplanade+Ave,+New+Orleans,+LA/?travelmode=walking" class="directions-btn" target="_blank">
+    📍 Open Turn-by-Turn in Google Maps
+  </a>
+
+  <div class="section-label">The Walk — One Direction, No Backtracking</div>
+
+  <div class="stop music" id="stop1" onclick="flyTo(1)">
+    <span class="stop-num">1</span>
+    <h3>Congo Square — Louis Armstrong Park</h3>
+    <span class="tag tag-hist">Historic</span><span class="tag tag-music">Music</span>
+    <div class="stop-addr">701 N Rampart St · Enter through the arch on Rampart</div>
+    <div class="stop-body">
+      <strong>Start here.</strong> Walk through the ornate iron archway into Armstrong Park and find the open paved area near the center — this is Congo Square.<br><br>
+      <strong>Why this ground matters:</strong> From the 1740s through the 1850s, this was the only place in the American South where enslaved people were legally permitted to gather, sing, dance, and play drums on Sundays. The Code Noir — the French colonial law governing slavery — was uniquely permissive about Sunday gatherings, and this square became the crossroads where West African drumming traditions, Caribbean rhythms, and European instrumentation first collided. That collision produced jazz.<br><br>
+      <strong>What you're standing on:</strong> Musicologists trace a direct line from the polyrhythmic drumming circles held here to the brass band tradition, to early jazz, to the second line parades that still roll through Tremé every Sunday. This is arguably the single most important site in American music history — not a concert hall, not a recording studio, but a patch of dirt where enslaved people kept their cultures alive.<br><br>
+      <strong>Architecture note:</strong> The park itself was redesigned in the 1970s. The arched entrance and landscaping are modern, but the square's position is original. Look for the Congo Square historical marker and the sculpture of Armstrong.
+    </div>
+  </div>
+
+  <div class="stop arch" id="stop2" onclick="flyTo(2)">
+    <span class="stop-num">2</span>
+    <h3>Tremé Streetscape — N Rampart to Governor Nicholls</h3>
+    <span class="tag tag-arch">Architecture</span><span class="tag tag-hist">Historic</span>
+    <div class="stop-addr">Walk east on St. Ann St, then south on N Claiborne Ave to Gov. Nicholls</div>
+    <div class="stop-body">
+      As you leave the park heading east, take in the residential streets around you. This is a living textbook of <strong>Creole vernacular architecture</strong>.<br><br>
+      <strong>Creole cottages:</strong> The small, 1½-story houses set right at the sidewalk edge (no setback, no front yard). They have steeply pitched roofs, symmetrical four-bay facades, and stucco or wood exteriors. These date from the 1830s-1850s and descend directly from French and Spanish colonial building traditions — the same forms you see in the French Quarter, but here built by and for free Black Creoles.<br><br>
+      <strong>Shotgun houses:</strong> The narrow, one-story rectangles with doors at each end and rooms arranged front-to-back with no hallway. This form is unique to New Orleans and likely descended from <strong>West African and Haitian building traditions</strong> brought through the Caribbean. The name may come from the Yoruba word "shogún" (meaning God's house), not the folk etymology about shooting a gun through the front door. These houses are raised on brick piers to handle flooding — a practical adaptation that became an aesthetic signature.<br><br>
+      <strong>Notice the contrast with the Garden District:</strong> No columns, no setbacks, no showmanship. These are houses built for community, not display — porches face the sidewalk because life happens between the house and the street.
+    </div>
+  </div>
+
+  <div class="stop" id="stop3" onclick="flyTo(3)">
+    <span class="stop-num">3</span>
+    <h3>St. Augustine Church</h3>
+    <span class="tag tag-sacred">Sacred</span><span class="tag tag-hist">Historic</span>
+    <div class="stop-addr">1210 Governor Nicholls St · Founded 1841</div>
+    <div class="stop-body">
+      The <strong>oldest African American Catholic parish in the United States</strong>. Founded in 1841 by free people of color who purchased pews for enslaved people — an act of radical solidarity in antebellum Louisiana.<br><br>
+      <strong>Why it matters historically:</strong> In 1842, free Black parishioners bought pew space specifically so enslaved people could worship alongside them. This was an extraordinary act: free people of color using their own money and social standing to create integrated sacred space within a slave society. The church became a center of civil rights long before that term existed.<br><br>
+      <strong>Notable parishioners:</strong> Homer Plessy — the plaintiff in <em>Plessy v. Ferguson</em> (1896), the Supreme Court case that legalized segregation for 58 years — worshipped here. So did civil rights attorney A.P. Tureaud and jazz musician Sidney Bechet. The Tomb of the Unknown Slave, a monument in the church grounds, honors all enslaved people buried in unmarked graves across the region.<br><br>
+      <strong>Architecture:</strong> The building is modest compared to St. Louis Cathedral — deliberately so. This was a community church, not a showpiece. The simplicity is the point.
+    </div>
+  </div>
+
+  <div class="stop museum" id="stop4" onclick="flyTo(4)">
+    <span class="stop-num">4</span>
+    <h3>New Orleans African American Museum</h3>
+    <span class="tag tag-art">Art</span><span class="tag tag-hist">Historic</span>
+    <div class="stop-addr">1418 Governor Nicholls St · Open Sat 11 AM - 4 PM · Free/$10 donation</div>
+    <div class="stop-body">
+      Housed in the <strong>Meilleur-Goldthwaite House</strong>, a Creole villa from the 1828-1829 period — one of the oldest surviving structures in Tremé and an architectural artifact in its own right.<br><br>
+      <strong>The building:</strong> This is a rare surviving example of a <strong>Creole plantation-style villa in an urban setting</strong>. The raised construction, the gallery, the relationship between the main house and the rear dependencies — this is how prosperous free people of color lived in early 19th-century New Orleans. The building is documented in the Library of Congress Historic American Buildings Survey (HABS).<br><br>
+      <strong>The collection:</strong> Art and material culture from the African diaspora in New Orleans — paintings, sculpture, documents, and rotating exhibitions by established and emerging Black artists. The museum also hosts a monthly market featuring local Black vendors and artisans.<br><br>
+      <strong>Why stop here:</strong> The combination of the historic building and the art inside gives you both the physical and creative history of Black New Orleans in one stop.
+    </div>
+  </div>
+
+  <div class="stop museum" id="stop5" onclick="flyTo(5)">
+    <span class="stop-num">5</span>
+    <h3>Backstreet Cultural Museum</h3>
+    <span class="tag tag-art">Art</span><span class="tag tag-music">Culture</span>
+    <div class="stop-addr">1531 St Philip St · Open Sat 10 AM - 4 PM · $10</div>
+    <div class="stop-body">
+      The city's largest collection of <strong>Mardi Gras Indian suits</strong> — and one of the most extraordinary small museums in America.<br><br>
+      <strong>What are Mardi Gras Indians?</strong> Since the mid-1800s, Black New Orleanians have organized into "tribes" that create elaborate beaded and feathered suits weighing up to 100 pounds, then parade through the streets on Mardi Gras day and St. Joseph's Night. The tradition honors the bond between African Americans and Native Americans who sheltered escaped enslaved people. Each suit takes an entire year to hand-sew — thousands of hours of intricate beadwork — and is worn only once before being retired or redesigned.<br><br>
+      <strong>The collection:</strong> Dozens of full suits in blazing color, plus costumes from Skull and Bone gangs (who wake people on Mardi Gras morning dressed as skeletons), Baby Dolls (women's masking tradition from the early 1900s), and jazz funeral artifacts. Photographs and films document second line parades — the neighborhood brass band processions that are Tremé's living heartbeat.<br><br>
+      <strong>Why this matters as art:</strong> These suits are wearable sculpture — folk art at the highest level of craft. The beadwork rivals anything in a fine art museum, but it's made in living rooms by working people for a single day of public performance. It's art that exists for community, not for collectors.
+    </div>
+  </div>
+
+  <div class="stop museum" id="stop6" onclick="flyTo(6)">
+    <span class="stop-num">6</span>
+    <h3>Le Musée de f.p.c.</h3>
+    <span class="tag tag-hist">Historic</span><span class="tag tag-art">Art</span>
+    <div class="stop-addr">2336 Esplanade Ave · Open Sat 10 AM - 1 PM · Call ahead: (504) 323-5074</div>
+    <div class="stop-body">
+      <strong>f.p.c. = Free People of Color.</strong> One of the only museums in the country dedicated exclusively to this history.<br><br>
+      <strong>Why "free people of color" matters:</strong> Before the Civil War, New Orleans had the largest community of free Black people in the Deep South — nearly 11,000 by 1840. Under the French and Spanish colonial systems (unlike the Anglo-American binary of "free or enslaved"), a distinct class of <em>gens de couleur libres</em> emerged: property owners, artisans, musicians, educators, soldiers. They built Tremé. They built this culture. And their story is usually erased in American history, which tends to frame Black experience as enslaved-then-emancipated with nothing in between.<br><br>
+      <strong>The experience:</strong> Guided tours are performed by a Black-led community theater company, No Dream Deferred. Actors take on the roles of actual historically free people of color who lived in New Orleans during the colonial and antebellum periods. The collection includes documents, paintings, decorative arts, and material culture from the 18th and 19th centuries.<br><br>
+      <strong>The building:</strong> A historic Esplanade Avenue house — Esplanade was the grand boulevard of the Creole community (their answer to the Americans' St. Charles Avenue).
+    </div>
+  </div>
+
+  <div class="section-label">After the Walk</div>
+
+  <div class="walk-info">
+    <h4>Tremé → French Quarter</h4>
+    From Esplanade Ave, you're at the border of the French Quarter. Walk south (toward the river) on any cross street — Royal, Chartres, Decatur — and you're in the Quarter in 5 minutes. Esplanade Ave itself is the dividing line between the Creole downtown (Tremé, Marigny) and the French Quarter. The architecture shifts as you cross — pay attention to the transition.
+  </div>
+
+  <a href="https://www.google.com/maps/dir/Louis+Armstrong+Park,+New+Orleans,+LA/St+Augustine+Catholic+Church,+1210+Governor+Nicholls+St,+New+Orleans,+LA/1418+Governor+Nicholls+St,+New+Orleans,+LA/1531+St+Philip+St,+New+Orleans,+LA/2336+Esplanade+Ave,+New+Orleans,+LA/?travelmode=walking" class="directions-btn" target="_blank">
+    📍 Open Turn-by-Turn in Google Maps
+  </a>
+
+  <div class="walk-info" style="margin-top:20px; text-align:center; font-size:12px; color:#6B7280;">
+    Built by Talbot · April 18, 2026
+  </div>
+</div>
+
+<script>
+const stops = [
+  { num: 1, lat: 29.96365, lng: -90.06775, name: "Congo Square — Armstrong Park", addr: "701 N Rampart St", color: "#C8A951" },
+  { num: 2, lat: 29.96480, lng: -90.06700, name: "Tremé Streetscape", addr: "Creole cottages & shotgun houses", color: "#2A9D8F" },
+  { num: 3, lat: 29.96532, lng: -90.06628, name: "St. Augustine Church", addr: "1210 Governor Nicholls St", color: "#C0623A" },
+  { num: 4, lat: 29.96658, lng: -90.06794, name: "African American Museum", addr: "1418 Governor Nicholls St", color: "#4A1A2C" },
+  { num: 5, lat: 29.96640, lng: -90.07050, name: "Backstreet Cultural Museum", addr: "1531 St Philip St", color: "#4A1A2C" },
+  { num: 6, lat: 29.96850, lng: -90.07350, name: "Le Musée de f.p.c.", addr: "2336 Esplanade Ave", color: "#4A1A2C" }
+];
+
+const map = L.map('map').setView([29.9660, -90.0695], 16);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; OpenStreetMap',
+  maxZoom: 19
+}).addTo(map);
+
+const routeCoords = stops.map(s => [s.lat, s.lng]);
+L.polyline(routeCoords, { color: '#4A1A2C', weight: 3, opacity: 0.6, dashArray: '8, 8' }).addTo(map);
+
+stops.forEach(s => {
+  const icon = L.divIcon({
+    html: `<div style="background:${s.color};color:white;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;border:2px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.3);">${s.num}</div>`,
+    className: '',
+    iconSize: [28, 28],
+    iconAnchor: [14, 14]
+  });
+  const marker = L.marker([s.lat, s.lng], { icon }).addTo(map);
+  marker.bindPopup(`<span class="popup-num">${s.num}</span> <b>${s.name}</b><br><span style="color:#6B7280;font-size:12px;">${s.addr}</span>`);
+  marker.on('click', () => {
+    document.getElementById('stop' + s.num)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
+});
+
+function flyTo(num) {
+  const s = stops.find(x => x.num === num);
+  if (s) map.flyTo([s.lat, s.lng], 18, { duration: 0.8 });
+}
+</script>
+
+</body>
+</html>
