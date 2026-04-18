@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Garden District Walking Tour — NOLA</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  :root {
+    --navy: #264653;
+    --teal: #2A9D8F;
+    --gold: #C8A951;
+    --coral: #E76F51;
+    --cream: #FAFAF5;
+    --sand: #F4F1EB;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--cream);
+    color: #1F2937;
+  }
+  .header {
+    background: linear-gradient(135deg, var(--navy) 0%, #1B3A4B 60%, var(--teal) 100%);
+    color: white;
+    padding: 28px 20px 20px;
+    text-align: center;
+  }
+  .header h1 { font-size: 22px; font-weight: 700; letter-spacing: 1px; }
+  .header p { font-size: 13px; opacity: 0.8; margin-top: 4px; }
+  #map { width: 100%; height: 45vh; min-height: 300px; }
+  .stops { padding: 0 16px 80px; }
+  .stop {
+    background: white;
+    border-radius: 12px;
+    padding: 18px;
+    margin-top: 14px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    border-left: 4px solid var(--teal);
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+  .stop:active { transform: scale(0.98); }
+  .stop.landmark { border-left-color: var(--gold); }
+  .stop.celebrity { border-left-color: var(--coral); }
+  .stop.shopping { border-left-color: #8B5CF6; }
+  .stop-num {
+    display: inline-block;
+    background: var(--navy);
+    color: white;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 26px;
+    font-size: 13px;
+    font-weight: 700;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+  .stop h3 {
+    display: inline;
+    font-size: 16px;
+    font-weight: 700;
+    vertical-align: middle;
+  }
+  .stop-addr {
+    font-size: 12px;
+    color: #6B7280;
+    margin: 4px 0 8px 34px;
+  }
+  .stop-body {
+    font-size: 14px;
+    line-height: 1.65;
+    color: #374151;
+    margin-left: 34px;
+  }
+  .stop-body strong { color: var(--navy); }
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+  .tag-hist { background: #DBEAFE; color: #1E40AF; }
+  .tag-celeb { background: #FEE2E2; color: #991B1B; }
+  .tag-food { background: #D1FAE5; color: #065F46; }
+  .tag-shop { background: #EDE9FE; color: #5B21B6; }
+  .tag-film { background: #FEF3C7; color: #92400E; }
+  .walk-info {
+    background: var(--sand);
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin-top: 14px;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+  .walk-info h4 { font-size: 14px; margin-bottom: 6px; color: var(--navy); }
+  .directions-btn {
+    display: block;
+    background: var(--teal);
+    color: white;
+    text-align: center;
+    padding: 14px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    margin-top: 16px;
+  }
+  .section-label {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--teal);
+    margin: 24px 0 4px;
+  }
+  /* Leaflet popup overrides */
+  .leaflet-popup-content-wrapper {
+    border-radius: 10px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  }
+  .leaflet-popup-content { font-size: 13px; line-height: 1.5; margin: 10px 14px; }
+  .leaflet-popup-content b { color: var(--navy); }
+  .popup-num {
+    display: inline-block;
+    background: var(--navy);
+    color: white;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    margin-right: 4px;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🌿 Garden District Walking Tour</h1>
+  <p>New Orleans — Saturday, April 18, 2026</p>
+  <p>~1.5 mi loop · 90 min fast / 2.5 hrs with stops</p>
+</div>
+
+<div id="map"></div>
+
+<div class="stops">
+
+  <div class="walk-info">
+    <h4>🚋 Getting There</h4>
+    Board the <strong>St. Charles streetcar</strong> going uptown at Carondelet & Canal. <strong>$1.25 exact change</strong> or Le Pass app. Sit on the right for mansion views. Ride ~22 min, get off at <strong>Washington Ave</strong> — you'll spot Commander's Palace turquoise paint as your cue to pull the cord.
+  </div>
+
+  <a href="https://www.google.com/maps/dir/Commander's+Palace,+1403+Washington+Ave,+New+Orleans,+LA/1239+First+St,+New+Orleans,+LA/1420+First+St,+New+Orleans,+LA/2425+Coliseum+St,+New+Orleans,+LA/2707+Coliseum+St,+New+Orleans,+LA/Fourth+St+and+Chestnut+St,+New+Orleans,+LA/1410+Jackson+Ave,+New+Orleans,+LA/Third+St+and+Magazine+St,+New+Orleans,+LA/Magazine+St+and+Louisiana+Ave,+New+Orleans,+LA/?travelmode=walking" class="directions-btn" target="_blank">
+    📍 Open Turn-by-Turn in Google Maps
+  </a>
+
+  <div class="section-label">The Walk</div>
+
+  <div class="stop landmark" id="stop1" onclick="flyTo(1)">
+    <span class="stop-num">1</span>
+    <h3>Commander's Palace & Lafayette Cemetery</h3>
+    <span class="tag tag-hist">Historic</span><span class="tag tag-food">Dining</span>
+    <div class="stop-addr">1403 Washington Ave & 1400 Washington Ave</div>
+    <div class="stop-body">
+      <strong>Commander's Palace</strong> — the turquoise Victorian that's impossible to miss. Built 1893, this is where Emeril Lagasse and Paul Prudhomme launched their careers before becoming household names. 7x James Beard Award winner. The turquoise color isn't accidental — it's been the restaurant's signature since the Brennan family took over in 1974. Saturday Jazz Brunch runs 11 AM - 2 PM with a live trio.<br><br>
+      <strong>Lafayette Cemetery No. 1</strong> — across the street. The tombs are above ground because New Orleans sits below sea level — bury someone and they float back up. Anne Rice held her own mock funeral here in 1995 to celebrate a book launch, complete with horse-drawn hearse and jazz band. Featured in <em>Interview with the Vampire</em> and <em>Double Jeopardy</em>. If the gate's locked (common during restoration), peek through the iron fence — the view is still worth it.
+    </div>
+  </div>
+
+  <div class="stop celebrity" id="stop2" onclick="flyTo(2)">
+    <span class="stop-num">2</span>
+    <h3>Anne Rice's House (Rosegate)</h3>
+    <span class="tag tag-celeb">Celebrity</span><span class="tag tag-hist">Literary</span>
+    <div class="stop-addr">1239 First Street</div>
+    <div class="stop-body">
+      Pink and gray Greek Revival, 1857, behind a wrought iron fence and magnolias. Anne Rice lived here from 1989 to 2004 and set her <em>Mayfair Witches</em> trilogy at this exact address — the "Witching Hour" house. Every Halloween she threw a legendary costume party with guests stretching down the block. When she sold it, she said she was done with New Orleans. She came back. Originally built for Albert Brevard, a cotton merchant. This is the single most photographed literary landmark in the Garden District.
+    </div>
+  </div>
+
+  <div class="stop landmark" id="stop3" onclick="flyTo(3)">
+    <span class="stop-num">3</span>
+    <h3>Morris-Israel House</h3>
+    <span class="tag tag-hist">Architecture</span>
+    <div class="stop-addr">1331 First Street</div>
+    <div class="stop-body">
+      Italianate masterpiece, 1869. Look up at the cast-iron galleries on the second floor — the filigree detail is extraordinary. This style of ironwork is unique to New Orleans at this concentration. The Garden District was built by Anglo-American merchants who deliberately competed with each other in architectural grandeur. Each mansion was a statement: <em>I've arrived, and I have taste.</em> The ironwork here is among the finest examples of that one-upmanship.
+    </div>
+  </div>
+
+  <div class="stop celebrity" id="stop4" onclick="flyTo(4)">
+    <span class="stop-num">4</span>
+    <h3>The Manning House</h3>
+    <span class="tag tag-celeb">Celebrity</span>
+    <div class="stop-addr">1420 First Street</div>
+    <div class="stop-body">
+      This is where Archie, Olivia, Cooper, Peyton, and Eli Manning lived. Peyton and Eli grew up throwing footballs on this lawn — the same lawn that produced two Super Bowl MVPs. Sold in 2002. No plaque, no fanfare. New Orleans is famously cool about its celebrities — people live here, not perform here. The Mannings are still deeply embedded in the city's identity. Archie was the Saints' first draft pick in 1971, arriving in a city that had never had a winning season.
+    </div>
+  </div>
+
+  <div class="stop celebrity" id="stop5" onclick="flyTo(5)">
+    <span class="stop-num">5</span>
+    <h3>Sandra Bullock's House</h3>
+    <span class="tag tag-celeb">Celebrity</span>
+    <div class="stop-addr">2425 Coliseum Street</div>
+    <div class="stop-body">
+      White Greek Revival columns, classic Garden District elegance. Bullock bought this in 2009 and is one of New Orleans' most committed celebrity residents. After Hurricane Katrina in 2005, she donated $1 million to the Red Cross and has been deeply involved in rebuilding efforts, particularly through the Warren Easton Charter High School. She's regularly spotted at local restaurants and grocery stores — a genuine New Orleanian, not a part-timer.
+    </div>
+  </div>
+
+  <div class="stop landmark" id="stop6" onclick="flyTo(6)">
+    <span class="stop-num">6</span>
+    <h3>Women's Opera Guild House</h3>
+    <span class="tag tag-hist">Architecture</span>
+    <div class="stop-addr">2507 Coliseum Street</div>
+    <div class="stop-body">
+      Built 1858, also called the Davis House. One of the few Garden District mansions you can actually tour inside — most are private. Greek Revival with Italianate touches. The Women's Opera Guild has maintained it since 1944, preserving the original furnishings, artwork, and decor. If it's open, step in — you'll see what these places look like behind the hedges and iron fences.
+    </div>
+  </div>
+
+  <div class="stop celebrity" id="stop7" onclick="flyTo(7)">
+    <span class="stop-num">7</span>
+    <h3>The Benjamin Button House</h3>
+    <span class="tag tag-film">Film Location</span><span class="tag tag-hist">Historic</span>
+    <div class="stop-addr">2707 Coliseum Street</div>
+    <div class="stop-body">
+      Wraparound porches on both floors, white, enormous, set back behind a hedge. This is where Brad Pitt's character grew up in the 2008 film <em>The Curious Case of Benjamin Button</em>. Officially the Nolan House (sometimes called Elms Mansion), built 1869. The most-photographed private house in the neighborhood. Stand across the street for the full view — you need the distance to take in the scale. The house predates the movie by 140 years and is genuinely one of the finest examples of antebellum architecture in the South.
+    </div>
+  </div>
+
+  <div class="stop" id="stop8" onclick="flyTo(8)">
+    <span class="stop-num">8</span>
+    <h3>John Goodman's Quiet Block</h3>
+    <span class="tag tag-celeb">Celebrity</span>
+    <div class="stop-addr">Fourth Street & Chestnut Street area</div>
+    <div class="stop-body">
+      John Goodman lives quietly in this pocket of the Garden District — he actually walks his dog and is genuinely part of the neighborhood. Don't hunt for the exact address; respect the privacy. This detour through Chestnut gives you a few blocks of the quieter, residential Garden District away from the tour groups. You'll see day-to-day mansion life — people gardening, kids on porches, dogs. This is what the neighborhood actually feels like when the walking tours aren't passing through.
+    </div>
+  </div>
+
+  <div class="stop landmark" id="stop9" onclick="flyTo(9)">
+    <span class="stop-num">9</span>
+    <h3>Buckner Mansion</h3>
+    <span class="tag tag-film">Film/TV</span><span class="tag tag-hist">Historic</span>
+    <div class="stop-addr">1410 Jackson Avenue</div>
+    <div class="stop-body">
+      Stop and take this in. Built 1856 for cotton baron Henry Buckner, who specifically told his architect to build something <em>bigger than his rival's house down the street</em>. Twenty-two columns. 22,000 square feet. It served as Soulé College for a century before becoming a private residence again. You know it as <strong>Miss Robichaux's Academy for Exceptional Young Ladies</strong> from <em>American Horror Story: Coven</em>. It's arguably the grandest mansion in the district — genuinely looks like it shouldn't be real. The scale is almost absurd, which was exactly the point. This is what "new money in 1850s cotton" looked like.
+    </div>
+  </div>
+
+  <div class="section-label">The Transition</div>
+
+  <div class="walk-info">
+    <h4>Garden District → Magazine Street</h4>
+    From Buckner, walk back to Prytania, then cut southwest on Third Street toward the river. You'll cross Coliseum, then Camp, then hit Magazine. Watch the architecture shift: the grand mansions give way, one block at a time, to Creole cottages and shotgun houses, then to the commercial strip. <strong>You're watching the class structure of 1850s New Orleans in architecture</strong> — wealth radiating outward from the river, the grandest homes nearest the high ground.
+  </div>
+
+  <div class="section-label">Magazine Street Shopping</div>
+
+  <div class="stop shopping" id="stop10" onclick="flyTo(10)">
+    <span class="stop-num">10</span>
+    <h3>Magazine Street — The Six-Mile Strip</h3>
+    <span class="tag tag-shop">Shopping</span>
+    <div class="stop-addr">Magazine St from Jackson Ave to Louisiana Ave (~15 blocks)</div>
+    <div class="stop-body">
+      Magazine Street is New Orleans' answer to Brooklyn's Atlantic Ave or LA's Abbott Kinney — six miles of independent boutiques, antique shops, galleries, and cafés. The best stretch for this walk runs from Jackson to Louisiana Ave (~15 blocks). Don't try to see it all — pick a side and work it slowly.<br><br>
+      <strong>What to look for:</strong> Vintage clothing shops, local art galleries, antique stores with estate jewelry, locally made hot sauce and pralines, indie bookstores. The vibe is unhurried and local — no chain stores, no rush. This is where New Orleanians actually shop.<br><br>
+      <strong>Good coffee stop:</strong> Look for any place with a line of locals outside. That's your signal.
+    </div>
+  </div>
+
+  <a href="https://www.google.com/maps/dir/Commander's+Palace,+1403+Washington+Ave,+New+Orleans,+LA/1239+First+St,+New+Orleans,+LA/1420+First+St,+New+Orleans,+LA/2425+Coliseum+St,+New+Orleans,+LA/2707+Coliseum+St,+New+Orleans,+LA/Fourth+St+and+Chestnut+St,+New+Orleans,+LA/1410+Jackson+Ave,+New+Orleans,+LA/Third+St+and+Magazine+St,+New+Orleans,+LA/Magazine+St+and+Louisiana+Ave,+New+Orleans,+LA/?travelmode=walking" class="directions-btn" target="_blank">
+    📍 Open Turn-by-Turn in Google Maps
+  </a>
+
+  <div class="walk-info" style="margin-top:20px; text-align:center; font-size:12px; color:#6B7280;">
+    Built by Talbot · April 18, 2026
+  </div>
+</div>
+
+<script>
+const stops = [
+  { num: 1, lat: 29.9288, lng: -90.0843, name: "Commander's Palace & Lafayette Cemetery", addr: "1403 Washington Ave", color: "#C8A951" },
+  { num: 2, lat: 29.9299, lng: -90.0800, name: "Anne Rice's House (Rosegate)", addr: "1239 First St", color: "#E76F51" },
+  { num: 3, lat: 29.9295, lng: -90.0810, name: "Morris-Israel House", addr: "1331 First St", color: "#2A9D8F" },
+  { num: 4, lat: 29.9307, lng: -90.0817, name: "The Manning House", addr: "1420 First St", color: "#E76F51" },
+  { num: 5, lat: 29.9280, lng: -90.0830, name: "Sandra Bullock's House", addr: "2425 Coliseum St", color: "#E76F51" },
+  { num: 6, lat: 29.9274, lng: -90.0835, name: "Women's Opera Guild House", addr: "2507 Coliseum St", color: "#2A9D8F" },
+  { num: 7, lat: 29.9264, lng: -90.0845, name: "Benjamin Button House", addr: "2707 Coliseum St", color: "#C8A951" },
+  { num: 8, lat: 29.9260, lng: -90.0870, name: "John Goodman's Block", addr: "Fourth & Chestnut", color: "#E76F51" },
+  { num: 9, lat: 29.9319, lng: -90.0792, name: "Buckner Mansion (AHS Coven)", addr: "1410 Jackson Ave", color: "#C8A951" },
+  { num: 10, lat: 29.9270, lng: -90.0809, name: "Magazine Street Shopping", addr: "Jackson to Louisiana Ave", color: "#8B5CF6" }
+];
+
+const map = L.map('map').setView([29.9285, -90.0830], 16);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; OpenStreetMap',
+  maxZoom: 19
+}).addTo(map);
+
+// Draw walking route line
+const routeCoords = stops.map(s => [s.lat, s.lng]);
+L.polyline(routeCoords, { color: '#264653', weight: 3, opacity: 0.6, dashArray: '8, 8' }).addTo(map);
+
+// Add markers
+stops.forEach(s => {
+  const icon = L.divIcon({
+    html: `<div style="background:${s.color};color:white;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;border:2px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.3);">${s.num}</div>`,
+    className: '',
+    iconSize: [28, 28],
+    iconAnchor: [14, 14]
+  });
+  const marker = L.marker([s.lat, s.lng], { icon }).addTo(map);
+  marker.bindPopup(`<span class="popup-num">${s.num}</span> <b>${s.name}</b><br><span style="color:#6B7280;font-size:12px;">${s.addr}</span>`);
+  marker.on('click', () => {
+    document.getElementById('stop' + s.num)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
+});
+
+function flyTo(num) {
+  const s = stops.find(x => x.num === num);
+  if (s) map.flyTo([s.lat, s.lng], 18, { duration: 0.8 });
+}
+</script>
+
+</body>
+</html>
